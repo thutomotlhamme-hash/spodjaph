@@ -13,6 +13,8 @@ export const brand = {
   whatsapp: '', // international format, digits only, e.g. 27820000000
   instagram: '', // handle without @
   location: '',
+  // EFT details shown on the payment page, e.g. 'FNB · Spodjaph Photography · Acc 62000000000 · Branch 250655'
+  bank: '',
 };
 
 // Photos: drop JPGs into /images/<slug>/ using the names below
@@ -21,6 +23,7 @@ export const brand = {
 export const pages = [
   {
     slug: 'weddings',
+    occasion: 'Wedding', // used on payment links
     title: 'Weddings',
     eyebrow: 'Weddings',
     headline: ['Your day,', 'unhurried.'],
@@ -39,6 +42,7 @@ export const pages = [
   },
   {
     slug: 'portraits',
+    occasion: 'Portrait session', // used on payment links
     title: 'Portraits',
     eyebrow: 'Portraits',
     headline: ['Presence,', 'in focus.'],
@@ -57,6 +61,7 @@ export const pages = [
   },
   {
     slug: 'graduation',
+    occasion: 'Graduation', // used on payment links
     title: 'Graduation',
     eyebrow: 'Graduation',
     headline: ['The walk', 'you earned.'],
@@ -75,6 +80,7 @@ export const pages = [
   },
   {
     slug: 'brands',
+    occasion: 'Brand shoot', // used on payment links
     title: 'Brands',
     eyebrow: 'Brands',
     headline: ['Your brand,', 'sharpened.'],
@@ -106,6 +112,7 @@ export const pages = [
   },
   {
     slug: 'events/baby-shower',
+    occasion: 'Baby shower', // used on payment links
     parent: 'events',
     title: 'Baby Shower',
     eyebrow: 'Baby Shower',
@@ -125,6 +132,7 @@ export const pages = [
   },
   {
     slug: 'events/birthday',
+    occasion: 'Birthday', // used on payment links
     parent: 'events',
     title: 'Birthday',
     eyebrow: 'Birthday',
@@ -144,6 +152,7 @@ export const pages = [
   },
   {
     slug: 'events/lobola',
+    occasion: 'Lobola', // used on payment links
     parent: 'events',
     title: 'Lobola',
     eyebrow: 'Lobola',
@@ -163,6 +172,7 @@ export const pages = [
   },
   {
     slug: 'events/matric-dance',
+    occasion: 'Matric dance', // used on payment links
     parent: 'events',
     title: 'Matric Dance',
     eyebrow: 'Matric Dance',

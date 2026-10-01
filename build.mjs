@@ -121,14 +121,14 @@ const closer = (heading, lede, items) => `
   </div>
 </section>`;
 
-const layout = ({ title, description, active, body, sub = '' }) => `<!doctype html>
+const layout = ({ title, description, active, body, sub = '', scripts = '', noindex = false }) => `<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(description)}">
-<meta name="theme-color" content="#000000">
+<meta name="theme-color" content="#000000">${noindex ? '\n<meta name="robots" content="noindex">' : ''}
 <meta property="og:title" content="${esc(title)}">
 <meta property="og:description" content="${esc(description)}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -136,7 +136,7 @@ const layout = ({ title, description, active, body, sub = '' }) => `<!doctype ht
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap">
 <link rel="stylesheet" href="/styles.css">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='8'/%3E%3Ccircle cx='16' cy='16' r='7' fill='none' stroke='%23f5f5f7' stroke-width='2.5'/%3E%3C/svg%3E">
-<script src="/main.js" defer></script>
+<script src="/main.js" defer></script>${scripts}
 </head>
 <body>
 ${gnav(active)}${sub}
@@ -317,7 +317,7 @@ const thanks = () =>
 <section class="hero" style="min-height:70vh;display:grid;place-content:center">
   <p class="product-label">Request received</p>
   <h1 class="hero-display">Thank you.</h1>
-  <div class="hero-stack"><p>We will be in touch shortly.<span>In the meantime, look around.</span></p><a class="link" href="/">Back to home</a></div>
+  <div class="hero-stack"><p>We will be in touch shortly with your quote.<span>It comes with a link to pay in full, or 50% to secure your date.</span></p><a class="link" href="/">Back to home</a></div>
 </section>`,
   });
 
@@ -334,6 +334,118 @@ const notFound = () =>
 </section>`,
   });
 
+// ---------- Payments ----------
+
+const payScripts = '\n<script src="/pay.js" defer></script>';
+
+const payPage = () =>
+  layout({
+    title: `Payment — ${brand.name} ${brand.descriptor}`,
+    description: 'Pay for your session securely by card.',
+    active: '',
+    noindex: true,
+    scripts: payScripts,
+    body: `
+<section class="bay bay-black">
+  <div class="wrap-narrow pay">
+    <header class="pay-head">
+      <p class="product-label">Payment</p>
+      <h1 class="display" id="pay-title">Your booking.</h1>
+    </header>
+    <p class="notice" id="pay-status" role="status" hidden></p>
+    <dl class="pay-summary" id="pay-summary" hidden>
+      <div><dt>Client</dt><dd id="pay-client"></dd></div>
+      <div><dt>Occasion</dt><dd id="pay-occasion"></dd></div>
+      <div><dt>Total</dt><dd id="pay-total"></dd></div>
+    </dl>
+    <div class="pay-options" id="pay-options" hidden></div>
+    <div class="pay-alt">
+      <h2 class="section-heading">Prefer cash or EFT?</h2>
+      <p class="muted">That’s fine. You can pay the balance in cash on the day, or by EFT${brand.bank ? ' to the account below' : '. Ask us for our banking details'}. Use your name as the reference.</p>
+      ${brand.bank ? `<p class="pay-bank">${esc(brand.bank)}</p>` : ''}
+    </div>
+    <p class="micro">Card payments are processed securely by Yoco. Your card details never touch this site.</p>
+  </div>
+</section>`,
+  });
+
+const payDone = () =>
+  layout({
+    title: `Payment received — ${brand.name} ${brand.descriptor}`,
+    description: 'Your payment has been received.',
+    active: '',
+    noindex: true,
+    scripts: payScripts,
+    body: `
+<section class="hero" style="min-height:70vh;display:grid;place-content:center">
+  <p class="product-label">Payment received</p>
+  <h1 class="hero-display">Thank you.</h1>
+  <div class="hero-stack">
+    <p id="done-lede" style="max-width:40ch">Your payment went through.</p>
+    <p id="done-next" class="muted" style="max-width:40ch;font-weight:400">A confirmation from Yoco is on its way to your email.</p>
+    <a class="link" href="/">Back to home</a>
+  </div>
+</section>`,
+  });
+
+const studio = () => {
+  const occasions = pages.filter((p) => p.occasion).map((p) => `<option>${esc(p.occasion)}</option>`).join('');
+  return layout({
+    title: `Studio — ${brand.name} ${brand.descriptor}`,
+    description: 'Create payment links.',
+    active: '',
+    noindex: true,
+    scripts: '\n<script src="/vendor/qrcode.js" defer></script>' + payScripts,
+    body: `
+<section class="bay bay-black">
+  <div class="wrap-narrow studio">
+    <header>
+      <p class="product-label">Studio</p>
+      <h1 class="display" style="margin-top:14px">Payment links.</h1>
+      <p class="lede" style="margin-top:16px">Make a link for a new quote, where the client pays in full or 50%, or for the balance on the day. Paid in cash? There’s nothing to do here.</p>
+    </header>
+    <form class="form" id="studio-form" novalidate>
+      <label class="sr-only" for="s-password">Studio password</label>
+      <input class="field full" id="s-password" name="password" type="password" placeholder="Studio password" autocomplete="current-password" required>
+      <label class="sr-only" for="s-name">Client name</label>
+      <input class="field full" id="s-name" name="name" placeholder="Client name" autocomplete="off" required>
+      <label class="sr-only" for="s-occasion">Occasion</label>
+      <select class="field" id="s-occasion" name="occasion" required>
+        <option value="" disabled selected>Occasion</option>${occasions}<option>Session</option>
+      </select>
+      <label class="sr-only" for="s-total">Total quote in rand</label>
+      <input class="field" id="s-total" name="total" type="number" inputmode="decimal" min="2" step="0.01" placeholder="Total quote (R)" required>
+      <fieldset class="segmented full">
+        <legend class="sr-only">Link type</legend>
+        <label><input type="radio" name="kind" value="quote" checked><span>Quote: full or 50%</span></label>
+        <label><input type="radio" name="kind" value="balance"><span>Balance only</span></label>
+      </fieldset>
+      <div class="full" id="balance-row" hidden>
+        <label class="sr-only" for="s-balance">Balance due in rand</label>
+        <input class="field" id="s-balance" name="balance" type="number" inputmode="decimal" min="2" step="0.01" placeholder="Balance due (R)">
+      </div>
+      <p class="notice full" id="studio-error" role="alert" hidden></p>
+      <button class="btn btn-lg" type="submit">Create link</button>
+    </form>
+    <div class="studio-out full" id="studio-out" hidden>
+      <div class="qr" id="studio-qr" aria-label="QR code for the payment link"></div>
+      <div class="studio-share">
+        <p class="micro" id="studio-summary"></p>
+        <label class="sr-only" for="studio-url">Payment link</label>
+        <input class="field" id="studio-url" readonly>
+        <div class="row">
+          <button class="btn btn-lg" type="button" id="studio-copy">Copy link</button>
+          <a class="btn btn-lg btn-ghost" id="studio-wa" target="_blank" rel="noopener">Send on WhatsApp</a>
+          <a class="link" id="studio-open" target="_blank" rel="noopener">Preview</a>
+        </div>
+        <p class="muted">On the day, show this QR code on your phone. The client scans it and pays by card.</p>
+      </div>
+    </div>
+  </div>
+</section>`,
+  });
+};
+
 // ---------- Write ----------
 
 const write = (path, html) => {
@@ -348,7 +460,12 @@ for (const p of pages) write(`${p.slug}/index.html`, category(p));
 write('contact/index.html', contact());
 write('thanks/index.html', thanks());
 write('404.html', notFound());
+write('pay/index.html', payPage());
+write('pay/done/index.html', payDone());
+write('studio/index.html', studio());
 cpSync('src/styles.css', join(OUT, 'styles.css'));
 cpSync('src/main.js', join(OUT, 'main.js'));
+cpSync('src/pay.js', join(OUT, 'pay.js'));
+cpSync('src/vendor', join(OUT, 'vendor'), { recursive: true });
 if (existsSync('images')) cpSync('images', join(OUT, 'images'), { recursive: true });
-console.log(`Built ${pages.length + 4} pages → ${OUT}/`);
+console.log(`Built ${pages.length + 7} pages → ${OUT}/`);
