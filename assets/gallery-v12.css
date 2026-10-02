@@ -117,3 +117,9 @@ body.gallery-view { background: var(--canvas); color: var(--charcoal); font-fami
 .lightbox-meta > b { font: 400 18px/1.2 var(--serif); letter-spacing: -0.02em; }
 .lightbox-actions button, .lightbox-actions a { min-height: 38px; border-radius: 50px; font: 500 13px/1 var(--sans); }
 .slideshow { background: #171717; }
+
+/* Photo edges: same mounted-print treatment as the public site */
+.gallery-cover { border-radius: var(--scene-radius); box-shadow: var(--photo-lift); }
+.gallery-cover::after, .gallery-photo::after { content: ""; position: absolute; inset: 0; border-radius: inherit; box-shadow: var(--photo-ring); pointer-events: none; z-index: 1; }
+.gallery-photo { border-radius: var(--photo-radius); box-shadow: var(--photo-lift); }
+.gallery-photo-actions, .gallery-photo-select, .gallery-photo figcaption { z-index: 2; }
