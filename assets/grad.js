@@ -96,5 +96,7 @@ function initLocationInput(){
 function init(){
  const wait=()=>{if(G.state.data)loadSelects(G.state.data);else document.addEventListener('spodja:data',ev=>loadSelects(ev.detail),{once:true})};wait();
  el('package').addEventListener('change',renderPackageSummary);el('date').addEventListener('change',()=>{S.time=null;renderEmptyTimes()});el('check-times').addEventListener('click',checkTimes);el('grad-form').addEventListener('submit',reserve);initLocationInput();
+ // "Choose MINI →" on a package card: pick it in the form and glide to the booking card, no reload.
+ document.addEventListener('click',e=>{const a=e.target.closest('[data-packages] a[href*="package="]');if(!a)return;const slug=new URL(a.href,location.href).searchParams.get('package'),ps=el('package');if(!slug||!ps||![...ps.options].some(o=>o.value===slug))return;e.preventDefault();ps.value=slug;ps.dispatchEvent(new Event('change',{bubbles:true}));document.querySelectorAll('[data-packages] .package').forEach(c=>c.classList.toggle('is-chosen',c.contains(a)));history.replaceState(null,'',`?package=${encodeURIComponent(slug)}#book`);const card=el('grad-form').closest('.s-book-card')||el('grad-form');(el('book')||card).scrollIntoView({behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth',block:'start'});const f=ps.closest('.field')||ps;f.classList.remove('is-flash');void f.offsetWidth;f.classList.add('is-flash')});
 }
 document.readyState==='loading'?document.addEventListener('DOMContentLoaded',init):init();

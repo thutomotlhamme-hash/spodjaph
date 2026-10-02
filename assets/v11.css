@@ -370,3 +370,9 @@ a.s-tile:hover .s-tile-copy h3 { transform: translateX(6px); }
 .s-pay-fine, .s-pay-help { margin: 14px 0 0; font-size: 12.5px; line-height: 1.55; color: var(--graphite-2); }
 .s-pay-help a { color: var(--graphite); text-decoration: underline; text-underline-offset: 3px; }
 .s-pay { background: var(--ink); }
+
+/* Package chosen from a card: mark the card, flash the form field it filled. */
+.package.is-chosen { outline: 2px solid var(--red); outline-offset: -2px; }
+.is-flash { animation: s-flash 1.6s var(--ease); }
+@keyframes s-flash { 0%, 30% { box-shadow: 0 0 0 3px rgba(200, 25, 49, 0.35); } 100% { box-shadow: 0 0 0 3px rgba(200, 25, 49, 0); } }
+#book { scroll-margin-top: 64px; }

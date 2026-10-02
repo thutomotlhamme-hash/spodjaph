@@ -139,6 +139,17 @@ test.describe('Book on WhatsApp: the second choice on every form', () => {
 // ---------------------------------------------------------------- Yoco, payment-first
 
 test.describe('Pay & book: Yoco is the first choice on every form', () => {
+  test('Grad House: choosing a package card fills the form and scrolls to it', async ({ page }) => {
+    await backend(page);
+    await page.goto('/graduation/');
+    await page.getByRole('link', { name: /Choose SIGNATURE/ }).click();
+    await expect(page.locator('#package')).toHaveValue('signature');
+    await expect(page).toHaveURL(/\/graduation\/\?package=signature#book$/);
+    await expect(page.locator('#grad-form')).toBeInViewport();
+    await expect(page.locator('#package-summary')).toContainText('SIGNATURE');
+    await expect(page.locator('.package.is-chosen')).toContainText('SIGNATURE');
+  });
+
 
   test('Grad House: hold slot → Yoco → verified success', async ({ page }) => {
     const calls = await backend(page);
