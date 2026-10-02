@@ -282,3 +282,66 @@ a.s-photo:hover img, a.s-tile:hover img { transform: scale(1.03); }
   .js .s-rise { opacity: 1; transform: none; transition: none; }
   * { transition-duration: 0.01ms !important; }
 }
+
+/* ---------- Motion: hero slideshow ---------- */
+.s-hero > img.s-slide { opacity: 0; transform: scale(1.06); transition: opacity 1.2s ease, transform 7.5s var(--ease); }
+.s-hero > img.s-slide.is-active { opacity: 1; transform: scale(1); }
+.s-slide-bars { position: absolute; z-index: 2; right: var(--gutter); bottom: clamp(18px, 3vw, 32px); display: flex; gap: 6px; }
+.s-slide-bars i { width: 24px; height: 2px; background: rgba(244, 239, 233, 0.3); overflow: hidden; }
+.s-slide-bars i::after { content: ""; display: block; width: 0; height: 100%; background: var(--text); }
+.s-slide-bars i.on::after { animation: s-bar 5.6s linear forwards; }
+@keyframes s-bar { to { width: 100%; } }
+@media (max-width: 760px) { .s-slide-bars { top: 88px; bottom: auto; } }
+
+/* ---------- Motion: logo accent pulse ---------- */
+.s-logo { position: relative; display: block; width: 64px; height: 40px; }
+.s-logo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; object-position: left center; transition: opacity 0.7s var(--ease), transform 0.9s var(--ease); }
+.s-logo .s-logo-accent { opacity: 0; transform: scale(0.97); }
+.s-logo.show-accent .s-logo-white, .brand:hover .s-logo-white, .brand:focus-visible .s-logo-white { opacity: 0; }
+.s-logo.show-accent .s-logo-accent, .brand:hover .s-logo-accent, .brand:focus-visible .s-logo-accent { opacity: 1; transform: none; }
+
+/* ---------- Motion: staggered reveal + hover lift ---------- */
+.js .s-stagger > * { opacity: 0; transform: translateY(18px); transition: opacity 0.8s var(--ease), transform 0.8s var(--ease); }
+.js .s-stagger.in > * { opacity: 1; transform: none; }
+.js .s-stagger.in > *:nth-child(2) { transition-delay: 0.07s; }
+.js .s-stagger.in > *:nth-child(3) { transition-delay: 0.14s; }
+.js .s-stagger.in > *:nth-child(4) { transition-delay: 0.21s; }
+.js .s-stagger.in > *:nth-child(5) { transition-delay: 0.28s; }
+.s-photo, .s-tile { box-shadow: inset 0 0 0 1px rgba(244, 239, 233, 0.06); }
+.s-tile-copy h3 { transition: transform 0.5s var(--ease); }
+a.s-tile:hover .s-tile-copy h3 { transform: translateX(6px); }
+@media (prefers-reduced-motion: reduce) {
+  .js .s-stagger > * { opacity: 1; transform: none; transition: none; }
+  .s-hero > img.s-slide { transition: none; transform: none; }
+}
+
+/* ---------- Space: compact live times (was one per row) ---------- */
+.time-groups { display: grid; gap: 18px; }
+.time-group { display: block; }
+.time-group h4 { margin: 0 0 8px; font: 600 11px/1.2 var(--sans); letter-spacing: 0.14em; text-transform: uppercase; color: var(--graphite-2); }
+.time-group .times { display: grid; grid-template-columns: repeat(auto-fill, minmax(72px, 1fr)); gap: 6px; }
+.time-btn { min-height: 46px; padding: 6px 4px; font-size: 14.5px; line-height: 1.25; text-align: center; }
+.time-btn small { display: block; font-size: 10.5px; color: var(--graphite-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.time-btn.selected small { color: rgba(255, 255, 255, 0.75); }
+
+/* ---------- iOS date inputs: never wider than the card ---------- */
+.s-book input[type=date], .s-book input[type=time] { display: block; min-width: 0; max-width: 100%; -webkit-appearance: none; appearance: none; text-align: left; }
+.s-book input[type=date]::-webkit-date-and-time-value, .s-book input[type=time]::-webkit-date-and-time-value { text-align: left; }
+
+/* ---------- Space: tighter booking on phones ---------- */
+@media (max-width: 640px) {
+  .s-book { padding: 56px 0 64px; }
+  .s-book .s-head { margin-bottom: 24px; }
+  .s-book-card { width: calc(100% - 24px); padding: 20px 16px; }
+  .s-book form { gap: 20px; }
+  .field-grid { gap: 14px; }
+  .package-picks { gap: 8px; }
+  .package-pick label { padding: 16px; gap: 4px; }
+  .package-pick b { font-size: 22px; }
+  .package-pick .package-includes { margin-top: 4px; padding-top: 8px; }
+  .s-book-wide { width: calc(100% - 24px); }
+  .s-book-wide > aside { order: 2; }
+  .s-hero { min-height: 80svh; }
+}
+.location-result b { display: block; }
+.location-result small { display: block; margin-top: 2px; font-size: 12.5px; color: var(--graphite-2); }

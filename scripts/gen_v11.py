@@ -52,7 +52,7 @@ def topbar(active):
     cur = ' aria-current="page"'
     links = "".join(f'<a href="{h}"{cur if h == active else ""}>{t}</a>' for h, t in NAV)
     return f"""<header class="topbar">
-  <a class="brand" href="/" aria-label="Spodja PH home"><img class="spodja-brand-mark" src="/assets/branding/spodja-logo-white.png" alt="Spodja PH"/></a>
+  <a class="brand" href="/" aria-label="Spodja PH home"><span class="s-logo"><img class="s-logo-white" src="/assets/branding/spodja-logo-white.png" alt="Spodja PH"/><img class="s-logo-accent" src="/assets/branding/spodja-logo-accent.png" alt="" aria-hidden="true"/></span></a>
   <nav class="nav" aria-label="Main">{links}<a class="s-nav-cta" href="/client/">Your gallery</a></nav>
   <button class="menu" type="button" aria-label="Open menu" aria-expanded="false">☰</button>
 </header>"""
@@ -63,7 +63,7 @@ def footer():
     return f"""<footer class="s-foot">
   <div class="s-foot-inner">
     <a href="/" aria-label="Spodja PH home"><img src="/assets/branding/spodja-logo-white.png" alt="Spodja PH"/></a>
-    <nav aria-label="Footer">{links}<a href="/client/">Your gallery</a><a href="https://wa.me/{WHATSAPP}" target="_blank" rel="noopener">WhatsApp +27 62 568 3235</a></nav>
+    <nav aria-label="Footer">{links}<a href="/client/">Your gallery</a><a href="https://wa.me/{WHATSAPP}" target="_blank" rel="noopener">WhatsApp</a></nav>
     <small>© <span data-year>2026</span> Spodja PH · Photography &amp; film · Gauteng</small>
   </div>
 </footer>"""
@@ -84,9 +84,23 @@ def page(body_page, title, description, active, main, scripts, preload=None):
 """
 
 
-def hero(img, eyebrow, h1, lede, primary, secondary=None, pos="50% 28%"):
+HD = "/assets/portfolio/hd/"
+SLIDES = {
+    "home": ["_DSC2179.jpg", "_DSC0396copy(3).jpg", "_DSC0336copy(3).jpg", "IMG_7556(1).JPG"],
+    "graduation": ["grad-house-1.jpg", "grad-house-5.jpg", "grad-house-8.jpg", "grad-house-10.jpg", "grad-house-7.jpg"],
+    "weddings": ["wedding-lane-1.jpg", "wedding-lane-5.jpg", "wedding-lane-3.jpg", "wedding-lane-6.jpg"],
+    "portraits": ["portrait-room-1.jpg", "portrait-room-5.jpg", "portrait-room-4.jpg", "portrait-room-6.jpg"],
+    "events": ["_DSC2181.jpg", "_DSC2179.jpg", "_DSC2115.jpg", "_DSC2151.jpg"],
+    "brands": ["_DSC0334copy(3).jpg", "_DSC0336copy(3).jpg", "_DSC2181.jpg", "_DSC0396copy(3).jpg"],
+}
+
+
+def hero(img, eyebrow, h1, lede, primary, secondary=None, pos="50% 28%", slides=None):
+    if slides:
+        img = HD + slides[0]
+    data = f' data-slides="{"|".join(HD + x for x in slides)}"' if slides else ""
     sec = f'<a class="s-btn s-btn-ghost" href="{secondary[0]}">{secondary[1]}</a>' if secondary else ""
-    return f"""<section class="s-hero">
+    return f"""<section class="s-hero"{data}>
   <img src="{img}" alt="" fetchpriority="high" style="object-position:{pos}"/>
   <div class="s-hero-copy">
     <span class="s-eyebrow">{eyebrow}</span>
@@ -101,7 +115,7 @@ def work(imgs, heading, link=("/book/", "Open The Book")):
     figs = "".join(f'<figure class="s-photo"><img src="{src}" alt="Spodja PH photograph" loading="lazy" decoding="async"/></figure>' for src in imgs[:5])
     return f"""<section class="s-bay" id="work">
   <div class="s-head s-rise"><div><span class="s-eyebrow">The work</span><h2 class="s-h2">{heading}</h2></div><a class="s-link" href="{link[0]}">{link[1]}</a></div>
-  <div class="s-wrap s-work s-rise">{figs}</div>
+  <div class="s-wrap s-work s-stagger">{figs}</div>
 </section>"""
 
 
@@ -163,7 +177,7 @@ for slug, cfg in LANES.items():
     imgs = list(dict.fromkeys(re.findall(r'src="(/assets/portfolio/[^"]+)"', s)))
     imgs = [i for i in imgs if i != cfg["hero"]] + [cfg["hero"]]
     main = "\n".join([
-        hero(cfg["hero"], cfg["eyebrow"], h1_of(s), cfg["lede"], ("#book", "See packages"), ("#work", "See the work"), cfg["pos"]),
+        hero(cfg["hero"], cfg["eyebrow"], h1_of(s), cfg["lede"], ("#book", "See packages"), ("#work", "See the work"), cfg["pos"], SLIDES[slug]),
         work(imgs, cfg["work_h"]),
         f"""<section class="s-book" id="book">
   <div class="s-head"><div><span class="s-eyebrow">Book</span><h2 class="s-h2">{cfg['book_h']}</h2></div><p>{cfg['book_p']}</p></div>
@@ -173,7 +187,7 @@ for slug, cfg in LANES.items():
 </section>""",
     ])
     out[f"{slug}/index.html"] = page(slug, cfg["title"], desc, f"/{slug}/", main,
-                                     ["/assets/site.js", "/assets/lane.js", "/assets/whatsapp-launch.js", "/assets/v11.js"], cfg["hero"])
+                                     ["/assets/site.js", "/assets/lane.js", "/assets/whatsapp-launch.js", "/assets/v11.js"], HD + SLIDES[slug][0])
 
 # ---------------------------------------------------------------- graduation
 s = read("graduation/index.html")
@@ -185,7 +199,7 @@ gdesc = re.search(r'<meta content="([^"]*)" name="description"', s)
 main = "\n".join([
     hero("/assets/portfolio/hd/grad-house-1.jpg", "The Grad House", h1_of(s),
          "Choose your session, campus, date and a live time. Then confirm on WhatsApp in one tap.",
-         ("#book", "Book my shoot"), ("#packages", "See packages"), "50% 24%"),
+         ("#book", "Book my shoot"), ("#packages", "See packages"), "50% 24%", SLIDES["graduation"]),
     """<section class="s-bay s-bay-2" id="packages">
   <div class="s-head s-rise"><div><span class="s-eyebrow">Packages</span><h2 class="s-h2">Choose your <em>story.</em></h2></div><p>Live prices. Every package includes edited high-resolution images in a private gallery.</p></div>
   <div class="package-grid" data-packages><article class="package"><h3>Loading packages…</h3></article></div>
@@ -238,16 +252,16 @@ main = "\n".join([
     hero("/assets/portfolio/hd/_DSC2179.jpg", "Spodja PH · Photography &amp; film",
          "We capture<br/><em>your story.</em>",
          "Photography for the moments that define you, from graduation and weddings to events, portraits and brands.",
-         ("#services", "Book a shoot"), ("/book/", "See the work"), "50% 30%"),
+         ("#services", "Book a shoot"), ("/book/", "See the work"), "50% 30%", SLIDES["home"]),
     f"""<section class="s-bay" id="services">
   <div class="s-head s-rise"><div><span class="s-eyebrow">What we shoot</span><h2 class="s-h2">Choose your <em>shoot.</em></h2></div><p>Each one has its own packages and booking, so you only see what applies to you.</p></div>
-  <div class="s-wrap s-tiles s-rise">{tiles}</div>
+  <div class="s-wrap s-tiles s-stagger">{tiles}</div>
 </section>""",
     work(["/assets/portfolio/hd/_DSC0396copy(3).jpg", "/assets/portfolio/hd/_DSC2181.jpg", "/assets/portfolio/hd/_DSC0336copy(3).jpg",
           "/assets/portfolio/hd/_DSC2151.jpg", "/assets/portfolio/hd/_DSC0281copy(3).jpg"], "Stories made <em>visible.</em>"),
     """<section class="s-bay s-bay-2">
   <div class="s-head s-rise"><div><span class="s-eyebrow">How it works</span><h2 class="s-h2">Three steps. <em>No guesswork.</em></h2></div></div>
-  <div class="s-wrap s-steps s-rise">
+  <div class="s-wrap s-steps s-stagger">
     <div class="s-step"><b>01</b><h3>Choose</h3><p>Pick your shoot and a package with clear prices and what's included.</p></div>
     <div class="s-step"><b>02</b><h3>Book</h3><p>Add your date and details, then confirm on WhatsApp. Your choices are already filled in.</p></div>
     <div class="s-step"><b>03</b><h3>Receive</h3><p>Your edited photos arrive in a private online gallery to view, download and share.</p></div>
