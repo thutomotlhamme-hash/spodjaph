@@ -16,6 +16,7 @@ const fmtDate = (d) => d ? new Intl.DateTimeFormat('en-ZA', { day: 'numeric', mo
 const fmtWhen = (iso) => new Intl.DateTimeFormat('en-ZA', { timeZone: 'Africa/Johannesburg', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }).format(new Date(iso));
 const timeOf = (iso) => iso ? new Intl.DateTimeFormat('en-ZA', { timeZone: 'Africa/Johannesburg', hour: '2-digit', minute: '2-digit', hour12: false }).format(new Date(iso)) : '';
 const state = (j) => j.status === 'cancelled' ? 'off' : j.total_cents > 0 && j.outstanding_cents <= 0 ? 'paid' : j.paid_cents > 0 ? 'part' : 'due';
+const demoTag = (x) => (x && x.is_demo ? '<span class="cc-demo-tag">DEMO</span>' : '');
 const METHOD = { yoco_link: 'Yoco link', yoco_checkout: 'Yoco (website)', card: 'Card', cash: 'Cash', eft: 'EFT', other: 'Other', refund: 'Refund' };
 
 let session = null;
@@ -110,12 +111,12 @@ function renderDay() {
 
 const jobCard = (j) => `<button type="button" class="cc-card" data-job="${j.id}">
   <span class="cc-dot k-${state(j)}"></span>
-  <div><b>${esc(j.client_name)}</b><small>${esc(j.title)}${j.starts_at ? ` · ${timeOf(j.starts_at)}` : ''}${j.venue ? ` · ${esc(j.venue)}` : ''}</small></div>
+  <div><b>${esc(j.client_name)}${demoTag(j)}</b><small>${esc(j.title)}${j.starts_at ? ` · ${timeOf(j.starts_at)}` : ''}${j.venue ? ` · ${esc(j.venue)}` : ''}</small></div>
   <div class="r"><b>${j.outstanding_cents > 0 ? money(j.outstanding_cents) : 'Cleared'}</b><small>${j.outstanding_cents > 0 ? 'outstanding' : money(j.total_cents)}</small></div></button>`;
 
 const enquiryCard = (e) => `<div class="cc-card cc-card-enq">
   <span class="cc-dot k-enq"></span>
-  <div><b>${esc(e.contact_name)}</b><small>${esc(e.enquiry_ref)} · ${esc(e.service_type)} · ${fmtDate(e.shoot_date)}${e.budget_range ? ` · ${esc(e.budget_range)}` : ''}</small></div>
+  <div><b>${esc(e.contact_name)}${demoTag(e)}</b><small>${esc(e.enquiry_ref)} · ${esc(e.service_type)} · ${fmtDate(e.shoot_date)}${e.budget_range ? ` · ${esc(e.budget_range)}` : ''}</small></div>
   <div class="r"><button class="cc-btn cc-btn-dark" type="button" data-confirm-enquiry="${e.id}">Confirm as booking</button></div></div>`;
 
 function visibleJobs() {
@@ -130,7 +131,7 @@ function renderJobs() {
   $('#jobs').innerHTML = rows.length ? rows.map((j) => `<tr data-job="${j.id}" class="k-row-${state(j)}">
       <td><input type="checkbox" data-select="${j.id}" ${selected.has(j.id) ? 'checked' : ''} aria-label="Select ${esc(j.client_name)}"/></td>
       <td>${fmtDate(j.shoot_date)}</td>
-      <td><b>${esc(j.client_name)}</b><small>${esc(j.job_ref)} · ${esc(j.source)}</small></td>
+      <td><b>${esc(j.client_name)}${demoTag(j)}</b><small>${esc(j.job_ref)} · ${esc(j.source)}</small></td>
       <td>${esc(j.title)}${j.status !== 'confirmed' ? ` <em class="cc-tag">${esc(j.status)}</em>` : ''}</td>
       <td class="r">${money(j.total_cents)}</td><td class="r">${money(j.paid_cents)}</td>
       <td class="r"><b>${j.outstanding_cents > 0 ? money(j.outstanding_cents) : '<span class="cc-ok">Cleared</span>'}</b></td></tr>`).join('')
@@ -151,7 +152,7 @@ function renderLinks() {
     const jobs = (l.items || []).map((i) => jobById(i.job_id)?.client_name).filter(Boolean);
     return `<div class="cc-card cc-link">
       <span class="cc-pill s-${st}">${st}</span>
-      <div><b>${esc(l.client_name)} · ${money(l.amount_cents)}</b><small>${esc(l.description)} · ${esc(l.link_ref)}${(l.items || []).length > 1 ? ` · bundle of ${l.items.length}` : ''}${jobs.length ? ` · ${esc([...new Set(jobs)].join(', '))}` : ''}</small><small>Created ${fmtWhen(l.created_at)}${l.paid_at ? ` · paid ${fmtWhen(l.paid_at)}` : st === 'open' ? ` · expires ${fmtWhen(l.expires_at)}` : ''}</small></div>
+      <div><b>${esc(l.client_name)} · ${money(l.amount_cents)}${demoTag(l)}</b><small>${esc(l.description)} · ${esc(l.link_ref)}${(l.items || []).length > 1 ? ` · bundle of ${l.items.length}` : ''}${jobs.length ? ` · ${esc([...new Set(jobs)].join(', '))}` : ''}</small><small>Created ${fmtWhen(l.created_at)}${l.paid_at ? ` · paid ${fmtWhen(l.paid_at)}` : st === 'open' ? ` · expires ${fmtWhen(l.expires_at)}` : ''}</small></div>
       <div class="cc-link-actions">${st === 'open' ? `<button class="cc-btn" type="button" data-link-wa="${l.id}">WhatsApp</button><button class="cc-btn" type="button" data-link-copy="${l.id}">Copy</button><button class="cc-btn" type="button" data-link-check="${l.id}">Check payment</button><button class="cc-btn cc-btn-quiet" type="button" data-link-cancel="${l.id}">Cancel</button>` : ''}</div></div>`;
   }).join('') : '<p class="cc-empty">No payment links yet. Open a booking to create one.</p>';
 }
@@ -299,11 +300,58 @@ function seg(container, cb) {
   });
 }
 
+// ------------------------------------------------------------------ records: read everything
+let rec = null, recKind = 'enquiries', recSearch = '';
+const pill = (v) => v ? `<span class="cc-pill s-${esc(String(v).toLowerCase())}">${esc(String(v).replace(/_/g, ' '))}</span>` : '';
+const REC = {
+  enquiries: { label: 'website enquiries', cols: ['Received', 'Client', 'Service', 'Shoot date', 'Package / budget', 'Value', 'Status', 'Booking'],
+    row: (e) => [fmtWhen(e.created_at), `<b>${esc(e.contact_name)}${demoTag(e)}</b><small>${esc(e.enquiry_ref)} · ${esc(e.contact_phone || '')}${e.contact_email ? ` · ${esc(e.contact_email)}` : ''}</small>`, esc(`${e.service_type}${e.client_type ? ' · ' + e.client_type : ''}`), fmtDate(e.shoot_date), `<span class="wrap">${esc(e.budget_range || e.offer_key || '—')}</span>`, e.estimated_value_cents != null ? money(e.estimated_value_cents) : 'Quote', pill(e.status), esc(e.job_ref || '—')] },
+  grad_bookings: { label: 'Grad House bookings', cols: ['Created', 'Graduate', 'Package', 'Session', 'Location', 'Total', 'Payment', 'Workflow'],
+    row: (g) => [fmtWhen(g.created_at), `<b>${esc(g.customer?.full_name || 'Graduate')}</b><small>${esc(g.booking_reference || '')} · ${esc(g.customer?.phone || '')}${g.customer?.email ? ` · ${esc(g.customer.email)}` : ''}</small>`, esc(g.package_slug || '—'), (g.scheduled_starts_at || g.requested_starts_at) ? fmtWhen(g.scheduled_starts_at || g.requested_starts_at) : '—', esc(g.requested_location_name || '—'), money(g.total_amount_cents), pill(g.payment_status), pill(g.workflow_status)] },
+  website_payments: { label: 'website checkouts', cols: ['Started', 'Enquiry', 'Package', 'Plan', 'Amount', 'Provider', 'Status', 'Paid'],
+    row: (o) => [fmtWhen(o.created_at), esc(o.enquiry_ref || '—'), esc(o.offer_key || '—'), esc(o.payment_plan || '—'), money(o.amount_cents), esc(o.provider), pill(o.status), o.paid_at ? fmtWhen(o.paid_at) : '—'] },
+  grad_payments: { label: 'Grad House payments', cols: ['Started', 'Booking', 'Amount', 'Provider', 'Status', 'Paid'],
+    row: (p) => [fmtWhen(p.created_at), esc(p.booking_reference || '—'), money(p.amount_cents), esc(p.provider), pill(p.status), p.paid_at ? fmtWhen(p.paid_at) : '—'] },
+  payment_links: { label: 'payment links', cols: ['Created', 'Client', 'For', 'Amount', 'Status', 'Paid / expires'],
+    row: (l) => [fmtWhen(l.created_at), `<b>${esc(l.client_name)}${demoTag(l)}</b><small>${esc(l.link_ref)}</small>`, `<span class="wrap">${esc(l.description)}</span>`, money(l.amount_cents), pill(linkStatus(l)), l.paid_at ? fmtWhen(l.paid_at) : fmtWhen(l.expires_at)] },
+  gallery_orders: { label: 'gallery orders', cols: ['Created', 'Order', 'Gallery', 'Total', 'Discount', 'Status'],
+    row: (o) => [fmtWhen(o.created_at), esc(o.order_ref || o.id.slice(0, 8)), esc(o.gallery_title || '—'), money(o.total_cents), money(o.discount_cents || 0), pill(o.status)] },
+  galleries: { label: 'client galleries', cols: ['Created', 'Gallery', 'Client', 'Event date', 'Status', 'Payment', 'Balance due'],
+    row: (g) => [fmtWhen(g.created_at), `<b>${esc(g.title)}</b><small>${esc(g.slug || '')}</small>`, esc(g.client_name || '—'), fmtDate(g.event_date), pill(g.status), pill(g.payment_status), money(g.balance_due_cents || 0)] },
+};
+async function loadRecords() {
+  $('#rec-meta').textContent = 'Loading everything…';
+  try { rec = await call('records'); renderRecords(); } catch (e) { $('#rec-meta').textContent = `Could not load records: ${e.message}`; }
+}
+function renderRecords() {
+  if (!rec) return;
+  const def = REC[recKind], q = recSearch.toLowerCase();
+  const rows = (rec[recKind] || []).filter((r) => !q || JSON.stringify(r).toLowerCase().includes(q));
+  $('#rec-head').innerHTML = `<tr>${def.cols.map((c) => `<th>${c}</th>`).join('')}</tr>`;
+  $('#rec-body').innerHTML = rows.length ? rows.map((r) => `<tr>${def.row(r).map((c, i) => `<td${/class="wrap"/.test(c) ? ' class="wrap"' : ''}>${c}</td>`).join('')}</tr>`).join('') : `<tr><td colspan="${def.cols.length}" class="cc-empty">No ${def.label} yet.</td></tr>`;
+  $('#rec-meta').textContent = `${rows.length} ${def.label}${q ? ' matching your search' : ''} · read-only view of everything in the system`;
+}
+
 function bind() {
   $$('[data-tab]').forEach((t) => t.addEventListener('click', () => {
     $$('[data-tab]').forEach((x) => x.classList.toggle('on', x === t));
     $$('[data-panel]').forEach((p) => (p.hidden = p.dataset.panel !== t.dataset.tab));
+    if (t.dataset.tab === 'records') loadRecords();
   }));
+  seg($('#rec-kind'), (b) => { recKind = b.dataset.k; renderRecords(); });
+  $('#rec-search').addEventListener('input', (e) => { recSearch = e.target.value; renderRecords(); });
+  $('#demo-seed').addEventListener('click', async (e) => {
+    if (!confirm('Add the QA demo data? Every record is labelled DEMO and can be removed with "Clear demo data".')) return;
+    e.target.disabled = true; e.target.textContent = 'Seeding…';
+    try { await call('demo_seed'); await load(); await loadRecords(); e.target.textContent = 'Demo data added ✓'; } catch (err) { alert(`Could not seed: ${err.message}`); e.target.textContent = 'Seed demo data'; }
+    finally { e.target.disabled = false; setTimeout(() => (e.target.textContent = 'Seed demo data'), 2500); }
+  });
+  $('#demo-clear').addEventListener('click', async (e) => {
+    if (!confirm('Remove all DEMO records? Real bookings and payments are not touched.')) return;
+    e.target.disabled = true;
+    try { const out = await call('demo_clear'); await load(); await loadRecords(); alert(`Removed ${out.removed.jobs} demo bookings, ${out.removed.links} links and ${out.removed.enquiries} enquiries.`); } catch (err) { alert(`Could not clear: ${err.message}`); }
+    finally { e.target.disabled = false; }
+  });
   $('#refresh').addEventListener('click', load);
   $$('[data-cal]').forEach((b) => b.addEventListener('click', () => {
     const n = Number(b.dataset.cal);
