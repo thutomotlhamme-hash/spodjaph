@@ -15,7 +15,9 @@ const today = () => new Intl.DateTimeFormat('en-CA', { timeZone: 'Africa/Johanne
 const fmtDate = (d) => d ? new Intl.DateTimeFormat('en-ZA', { day: 'numeric', month: 'short', year: 'numeric' }).format(new Date(`${d}T12:00:00`)) : 'No date';
 const fmtWhen = (iso) => new Intl.DateTimeFormat('en-ZA', { timeZone: 'Africa/Johannesburg', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }).format(new Date(iso));
 const timeOf = (iso) => iso ? new Intl.DateTimeFormat('en-ZA', { timeZone: 'Africa/Johannesburg', hour: '2-digit', minute: '2-digit', hour12: false }).format(new Date(iso)) : '';
-const state = (j) => j.status === 'cancelled' ? 'off' : j.total_cents > 0 && j.outstanding_cents <= 0 ? 'paid' : j.paid_cents > 0 ? 'part' : 'due';
+const state = (j) => j.status === 'cancelled' ? 'off' : !(j.total_cents > 0) ? 'enq' : j.outstanding_cents <= 0 ? 'paid' : j.paid_cents > 0 ? 'part' : 'due';
+// What to show where the outstanding amount goes: a R0 total is an unpriced quote, not a cleared booking.
+const owedLabel = (j) => !(j.total_cents > 0) ? 'Quote pending' : j.outstanding_cents > 0 ? money(j.outstanding_cents) : 'Cleared';
 const demoTag = (x) => (x && x.is_demo ? '<span class="cc-demo-tag">DEMO</span>' : '');
 const METHOD = { yoco_link: 'Yoco link', yoco_checkout: 'Yoco (website)', card: 'Card', cash: 'Cash', eft: 'EFT', other: 'Other', refund: 'Refund' };
 
@@ -112,7 +114,7 @@ function renderDay() {
 const jobCard = (j) => `<button type="button" class="cc-card" data-job="${j.id}">
   <span class="cc-dot k-${state(j)}"></span>
   <div><b>${esc(j.client_name)}${demoTag(j)}</b><small>${esc(j.title)}${j.starts_at ? ` · ${timeOf(j.starts_at)}` : ''}${j.venue ? ` · ${esc(j.venue)}` : ''}</small></div>
-  <div class="r"><b>${j.outstanding_cents > 0 ? money(j.outstanding_cents) : 'Cleared'}</b><small>${j.outstanding_cents > 0 ? 'outstanding' : money(j.total_cents)}</small></div></button>`;
+  <div class="r"><b>${owedLabel(j)}</b><small>${!(j.total_cents > 0) ? 'set a total' : j.outstanding_cents > 0 ? 'outstanding' : money(j.total_cents)}</small></div></button>`;
 
 const enquiryCard = (e) => `<div class="cc-card cc-card-enq">
   <span class="cc-dot k-enq"></span>
@@ -134,7 +136,7 @@ function renderJobs() {
       <td><b>${esc(j.client_name)}${demoTag(j)}</b><small>${esc(j.job_ref)} · ${esc(j.source)}</small></td>
       <td>${esc(j.title)}${j.status !== 'confirmed' ? ` <em class="cc-tag">${esc(j.status)}</em>` : ''}</td>
       <td class="r">${money(j.total_cents)}</td><td class="r">${money(j.paid_cents)}</td>
-      <td class="r"><b>${j.outstanding_cents > 0 ? money(j.outstanding_cents) : '<span class="cc-ok">Cleared</span>'}</b></td></tr>`).join('')
+      <td class="r"><b>${!(j.total_cents > 0) ? 'Quote pending' : j.outstanding_cents > 0 ? money(j.outstanding_cents) : '<span class="cc-ok">Cleared</span>'}</b></td></tr>`).join('')
     : '<tr><td colspan="7" class="cc-empty">No bookings here.</td></tr>';
   $('#select-bar').hidden = !selected.size;
   $('#select-count').textContent = `${selected.size} selected · ${money([...selected].reduce((n, id) => n + Math.max(0, jobById(id)?.outstanding_cents || 0), 0))} outstanding`;

@@ -284,4 +284,16 @@ test.describe('command centre (/command/)', () => {
     await page.getByRole('button', { name: 'Clear demo data' }).click();
     await expect.poll(() => (calls.demo_clear || []).length).toBe(1);
   });
+
+  test('an unpriced quote (R0 total) shows "Quote pending", never "Cleared"', async ({ page }) => {
+    const { db } = await commandBackend(page);
+    db.jobs.push({ id: '66666666-6666-4666-8666-666666666666', job_ref: 'SJ-QUOTE', source: 'whatsapp', client_name: 'Amahle Studio', title: 'Brand content day', service_type: 'brands', shoot_date: null, total_cents: 0, status: 'tentative' });
+    await page.goto('/command/');
+    await page.getByRole('tab', { name: 'Bookings' }).click();
+    await page.locator('#job-filter [data-f="all"]').click();
+    const row = page.locator('#jobs tr', { hasText: 'Amahle Studio' });
+    await expect(row).toContainText('Quote pending');
+    await expect(row).not.toContainText('Cleared');
+  });
 });
+
