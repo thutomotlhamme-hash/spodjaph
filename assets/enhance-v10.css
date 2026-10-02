@@ -1,0 +1,89 @@
+/* v10 enhancement layer — intentionally sits ON TOP of the user's v5 UI. Base v5 CSS is untouched. */
+html,body{max-width:100%;overflow-x:hidden}body{min-width:0}
+img{max-width:100%}.topbar,.nav,.home-live-copy,.lane-hero-copy,.journey-shell,.form-shell,.checkout-stage,.checkout-card{min-width:0}
+/* Keep photography faithful. v5's presentation muted the images; v10 removes that UI filter without altering any file. */
+.home-live-bg img,.lane-hero-art img,.grad-hero .hero-media{filter:none!important}
+
+/* Cinematic slideshows: same v5 containers, no layout replacement. */
+.home-live-bg,.lane-hero-art,.hero-media{isolation:isolate}
+.v10-slides{position:absolute;inset:0;overflow:hidden;pointer-events:none}
+.home-live-bg .v10-slides{inset:0}
+.v10-slide{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;object-fit:cover!important;opacity:0!important;transform:scale(1.035)!important;transition:opacity 1.15s ease,transform 7.5s cubic-bezier(.22,.61,.36,1);box-shadow:none!important;border:0!important;filter:none!important}
+.v10-slide.is-active{opacity:1!important;transform:scale(1.0)!important}
+.home-live-bg>.v10-slides .v10-slide{object-position:center 42%!important}
+.lane-hero-art>.v10-slides{inset:0}.lane-hero-art>.main{opacity:0!important}.lane-hero-art>.v10-slides .v10-slide{object-position:center center!important}
+.hero-media>.v10-slides{z-index:0}.hero-media>.v10-slides .v10-slide{object-position:center 35%!important}
+.hero-media.has-image{background-image:none!important}.hero-media.has-image::after{z-index:1}
+.v10-slide-progress{position:absolute;z-index:5;right:clamp(16px,3vw,36px);bottom:clamp(16px,3vw,32px);display:flex;gap:6px;pointer-events:none}
+.v10-slide-progress i{display:block;width:22px;height:2px;background:rgba(255,255,255,.35);overflow:hidden}.v10-slide-progress i::after{content:"";display:block;height:100%;width:0;background:#fff}.v10-slide-progress i.active::after{animation:v10bar 6s linear forwards}@keyframes v10bar{to{width:100%}}
+
+/* Shine comes from presentation, not image recolouring. */
+.v10-shine-frame{position:relative;isolation:isolate;box-shadow:0 26px 70px rgba(18,15,13,.16)}
+.v10-shine-frame::after{content:"";position:absolute;inset:-1px;pointer-events:none;border:1px solid rgba(255,255,255,.24);box-shadow:inset 0 0 50px rgba(255,255,255,.035)}
+.section.paper,.journey,.stories,.lane-intro{position:relative}.section.paper::before,.journey::before,.stories::before{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 82% 8%,rgba(233,102,42,.06),transparent 28%);opacity:.7}
+.v10-rise{opacity:0;transform:translateY(24px);transition:opacity .8s ease,transform .9s cubic-bezier(.22,.61,.36,1)}.v10-rise.v10-in{opacity:1;transform:none}
+
+/* The Book: images only, original HD masters, no image labels/captions. */
+.book-page{background:#0f0d0c;color:#fff}.book-main{padding:104px clamp(10px,2vw,26px) 30px}.book-title{padding:20px clamp(8px,2vw,18px) 34px;font-size:clamp(46px,8vw,110px);line-height:.82;letter-spacing:-.065em;text-transform:uppercase}.book-grid{columns:3 340px;column-gap:clamp(8px,1.3vw,18px)}.book-shot{display:block;width:100%;margin:0 0 clamp(8px,1.3vw,18px);break-inside:avoid;background:#161312;cursor:zoom-in;overflow:hidden}.book-shot img{display:block;width:100%;height:auto;filter:none!important;transition:transform .7s cubic-bezier(.22,.61,.36,1)}.book-shot:hover img{transform:scale(1.012)}
+.book-lightbox{position:fixed;inset:0;width:100vw;height:100dvh;max-width:none;max-height:none;padding:0;border:0;background:rgba(8,7,6,.97);overflow:hidden}.book-lightbox::backdrop{background:rgba(8,7,6,.97)}.book-lightbox-stage{position:absolute;inset:0;display:grid;place-items:center;padding:max(18px,env(safe-area-inset-top)) max(18px,env(safe-area-inset-right)) max(18px,env(safe-area-inset-bottom)) max(18px,env(safe-area-inset-left))}.book-lightbox-stage img{max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain;filter:none!important}.book-close,.book-prev,.book-next{position:absolute;z-index:4;border:0;background:rgba(255,255,255,.10);color:#fff;width:48px;height:48px;border-radius:999px;font-size:26px;cursor:pointer}.book-close{top:max(16px,env(safe-area-inset-top));right:max(16px,env(safe-area-inset-right))}.book-prev,.book-next{top:50%;transform:translateY(-50%)}.book-prev{left:max(12px,env(safe-area-inset-left))}.book-next{right:max(12px,env(safe-area-inset-right))}
+
+/* Package cards: inclusions and live arithmetic. */
+.package-pick label{height:100%}.package-includes{display:block!important;margin-top:9px!important;padding-top:9px;border-top:1px solid rgba(18,15,13,.12);font-size:9px!important;line-height:1.5!important;color:var(--muted)!important;font-style:normal}.inline-checks .check.is-included{opacity:.68}.inline-checks .check.is-included label::after{content:" · Included";font-size:9px;color:var(--orange);font-weight:900}.addon-price{font-weight:900;color:var(--orange)}.live-total{margin:18px 0;padding:16px 18px;background:#17120f;color:#fff;display:grid;grid-template-columns:1fr auto;gap:8px 20px;align-items:end}.live-total small{color:rgba(255,255,255,.6);display:block}.live-total strong{font-size:clamp(22px,3vw,34px)}.live-total .deposit{grid-column:1/-1;color:#f4c1a5;font-size:11px}
+
+/* Grad House combo / whole day slot UI. */
+.location-combo{position:relative}.location-results{position:absolute;left:0;right:0;top:calc(100% + 6px);z-index:30;background:#fff;border:1px solid var(--line);box-shadow:0 20px 50px rgba(18,15,13,.18);max-height:min(42dvh,360px);overflow:auto;display:none}.location-results.show{display:block}.location-result{width:100%;display:block;text-align:left;border:0;border-bottom:1px solid var(--line);background:#fff;padding:13px 14px;cursor:pointer}.location-result strong,.location-result small{display:block}.location-result small{color:var(--muted);margin-top:3px}.location-result:hover{background:#fff6ef}.location-picked{margin-top:7px}.time-groups{display:grid;gap:14px}.time-group h4{font-size:10px;text-transform:uppercase;letter-spacing:.13em;color:var(--muted);margin:0 0 8px}.time-group .times{display:flex;flex-wrap:wrap;gap:8px}
+
+/* Payment providers */
+.provider-title{display:flex;align-items:end;justify-content:space-between;gap:16px;margin:22px 0 10px}.provider-title strong{font-size:15px}.provider-title small{color:var(--muted)}.provider-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.provider-btn{border:1px solid var(--line);background:#fff;color:var(--ink);min-height:64px;padding:12px;border-radius:14px;font-weight:900;cursor:pointer;display:grid;place-items:center;gap:2px}.provider-btn small{font-size:8px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}.provider-btn.active{border-color:var(--orange);box-shadow:0 0 0 3px rgba(233,102,42,.08)}.provider-btn:disabled{opacity:.38;cursor:not-allowed}.provider-checkout{margin-top:12px;width:100%}
+
+/* Screens reached by buttons must fit the viewport and never clip. */
+.checkout-page{min-height:100dvh}.checkout-stage{width:min(100%,1600px);min-height:calc(100dvh - 72px);grid-template-columns:minmax(0,.86fr) minmax(0,1.14fr);align-items:center;overflow:visible}.checkout-card,.journey-form,.form,.form-shell{max-width:100%;min-width:0;overflow-wrap:anywhere}.checkout-card{max-height:calc(100dvh - 120px);overflow:auto;overscroll-behavior:contain}.btn,.wallet-btn,.card-pay-btn,.provider-btn{max-width:100%;white-space:normal;text-align:center}.field-grid>*{min-width:0}.field input,.field select,.field textarea{max-width:100%;width:100%;box-sizing:border-box}.nav{max-width:calc(100vw - 120px)}
+
+@media(max-width:900px){.checkout-stage{grid-template-columns:1fr;align-items:start}.checkout-card{max-height:none;overflow:visible}.provider-grid{grid-template-columns:1fr 1fr}.book-grid{columns:2 260px}}
+@media(max-width:700px){body{padding-left:env(safe-area-inset-left);padding-right:env(safe-area-inset-right)}.topbar{padding-left:max(16px,env(safe-area-inset-left));padding-right:max(16px,env(safe-area-inset-right))}.home-live-bg{inset:72px 0 0 24%!important}.lane-hero-art{right:-30vw!important;width:88vw!important;opacity:.42!important}.lane-hero-copy{max-width:92vw}.lane-hero h1{max-width:88vw}.checkout-stage{padding:92px 14px max(34px,env(safe-area-inset-bottom));gap:24px}.checkout-intro h1{font-size:clamp(48px,17vw,78px)}.checkout-card{width:100%;padding:20px 14px}.provider-grid{grid-template-columns:1fr}.pay-plan-grid{grid-template-columns:1fr!important}.field-grid{grid-template-columns:1fr!important}.field.full{grid-column:auto!important}.field input,.field select,.field textarea{font-size:16px}.book-main{padding-top:86px}.book-title{font-size:clamp(44px,17vw,78px)}.book-grid{columns:1}.book-prev,.book-next{width:42px;height:42px}.v10-slide-progress{bottom:18px;right:16px}.live-total{grid-template-columns:1fr}.live-total .deposit{grid-column:auto}.nav{max-width:none}}
+@media(max-height:720px) and (min-width:701px){.checkout-stage{padding-top:100px;align-items:start}.checkout-card{max-height:calc(100dvh - 120px)}}
+@media(prefers-reduced-motion:reduce){.v10-slide,.v10-rise,.book-shot img{transition:none!important;animation:none!important;transform:none!important}.v10-slide-progress{display:none}}
+
+/* launch-mode crop intelligence + WhatsApp event journeys */
+.lane-hero-art .v10-slide[src*="portrait-room"],.lane-hero-art .v10-slide[src*="wedding-lane"],.hero-media .v10-slide[src*="grad-house"],.photo-card img[src*="portrait-room"],.photo-card img[src*="wedding-lane"],.photo-card img[src*="grad-house"]{object-position:50% 26%!important}
+.story-main img,.story-small img{object-position:50% 35%}
+.journey-visuals{display:grid;grid-template-columns:1.25fr .75fr .75fr;gap:8px;margin:0 0 24px;min-height:260px}.journey-visuals figure{margin:0;overflow:hidden;border-radius:18px;background:#1c1816;min-height:250px}.journey-visuals img{display:block;width:100%;height:100%;object-fit:cover;object-position:50% 28%;filter:none!important}.journey-sharebar{display:grid;grid-template-columns:1fr auto;gap:4px 16px;align-items:center;background:#17120f;color:#fff;border-radius:18px;padding:16px 18px;margin:-8px 0 18px}.journey-sharebar strong{font-size:13px}.journey-sharebar small{font-size:10px;color:rgba(255,255,255,.55)}.journey-sharebar .btn{grid-column:2;grid-row:1/3;border-color:rgba(255,255,255,.25);color:#fff}.upsell-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:7px 0 24px}.upsell-card{display:grid;grid-template-columns:auto 1fr;align-items:center;gap:10px;border:1px solid var(--line);background:#fffdf9;border-radius:15px;padding:12px 13px;cursor:pointer}.upsell-card:has(input:checked){border-color:var(--orange);box-shadow:0 0 0 3px rgba(233,102,42,.07)}.upsell-card span b,.upsell-card span small{display:block}.upsell-card span b{font-size:12px}.upsell-card span small{font-size:9px;color:var(--orange);margin-top:3px}.whatsapp-note{background:#edf7ec!important;border-left:3px solid #1b7f3a!important}.whatsapp-submit{width:100%;font-size:14px}.package-pick label{cursor:pointer}@media(max-width:700px){.journey-visuals{grid-template-columns:1fr 1fr;min-height:0}.journey-visuals figure:first-child{grid-column:1/-1;min-height:72vw}.journey-visuals figure:not(:first-child){min-height:54vw}.journey-sharebar{grid-template-columns:1fr}.journey-sharebar .btn{grid-column:1;grid-row:auto;margin-top:8px}.upsell-grid{grid-template-columns:1fr}.lane-hero-art .v10-slide,.hero-media .v10-slide{object-position:50% 24%!important}}
+
+@media(max-width:1000px){.lane-hero-art{opacity:.72!important}}
+@media(max-width:700px){.lane-hero-art{opacity:.78!important}}
+
+/* Brand mark refresh — exact uploaded Spodja mark, no AI replacement. */
+.brand{min-width:0!important}
+.brand img.spodja-brand-mark{display:block!important;width:auto!important;height:58px!important;max-width:138px!important;object-fit:contain!important;filter:none!important}
+@media(max-width:700px){.brand img.spodja-brand-mark{height:48px!important;max-width:112px!important}}
+
+/* Dynamic Spodja mark — original identity remains primary; accent variant appears as a restrained pulse. */
+.brand{overflow:visible}
+.spodja-logo-juggle{position:relative;display:block;width:138px;height:58px;flex:0 0 138px}
+.spodja-logo-juggle img.spodja-brand-mark{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;max-width:none!important;object-fit:contain!important;object-position:left center!important;margin:0!important;transition:opacity .72s cubic-bezier(.22,.61,.36,1),transform .9s cubic-bezier(.22,.61,.36,1)!important;will-change:opacity,transform}
+.spodja-logo-original{opacity:1!important;transform:scale(1)!important}
+.spodja-logo-accent{opacity:0!important;transform:scale(.965)!important;pointer-events:none}
+.spodja-logo-juggle.show-accent .spodja-logo-original,.brand:hover .spodja-logo-original,.brand:focus-visible .spodja-logo-original{opacity:0!important;transform:scale(.985)!important}
+.spodja-logo-juggle.show-accent .spodja-logo-accent,.brand:hover .spodja-logo-accent,.brand:focus-visible .spodja-logo-accent{opacity:1!important;transform:scale(1)!important}
+@media(max-width:700px){.spodja-logo-juggle{width:112px;height:48px;flex-basis:112px}}
+@media(prefers-reduced-motion:reduce){.spodja-logo-juggle img.spodja-brand-mark{transition:none!important;transform:none!important}.spodja-logo-juggle.show-accent .spodja-logo-original{opacity:1!important}.spodja-logo-juggle.show-accent .spodja-logo-accent{opacity:0!important}}
+
+/* Visual clarity pass — photography was over-darkened/undersized across hero visuals and the payment stage lacked any gallery of real work before checkout */
+.home-live-bg img{opacity:.6!important}
+.lane-hero-art{opacity:1!important;width:min(54vw,860px)!important}
+.checkout-story{margin:26px 0 4px}
+.checkout-story .kicker{margin-bottom:12px}
+.checkout-story-line{color:rgba(255,255,255,.6);font-size:13px;line-height:1.7;max-width:480px;margin:0 0 16px}
+.checkout-story .journey-visuals{min-height:0}
+.checkout-story .journey-visuals figure{min-height:150px}
+@media(max-width:1050px){
+  .lane-hero-art{opacity:.82!important;width:70vw!important;right:-14vw!important}
+}
+@media(max-width:760px){
+  .home-live-bg{opacity:.94!important}
+  .lane-hero-art{opacity:.88!important;width:84vw!important;right:-16vw!important}
+}
+@media(max-width:700px){
+  .home-live-bg{opacity:.94!important}
+  .lane-hero-art{opacity:.9!important;width:90vw!important;right:-14vw!important}
+}

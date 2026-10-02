@@ -1,52 +1,68 @@
-# spodjaph
+# Spodja PH — Photography Business + Client Gallery OS
 
-Redesign of spodjaph.netlify.app on a "midnight exhibition" system: black bays, oversized display type, photographs framed as the product, and a single rationed accent (blue, for booking only).
+Production candidate for the Spodja PH photography estate.
 
-## Edit
+**Deploy root:** this directory.
 
-- **Words and contact details:** `src/site.config.mjs`. Empty contact fields are simply hidden.
-- **Look:** `src/styles.css` (all tokens are at the top).
-- **Build:** `node build.mjs` writes the finished site to `dist/`. No dependencies.
+## Primary routes
 
-## Photos
+- `/` — Spodja reception / portfolio entry
+- `/graduation/` — graduation booking lane
+- `/weddings/` — wedding booking lane
+- `/events/` — event booking lane
+- `/portraits/` — portrait booking lane
+- `/brands/` — brand / agency lane
+- `/payment/` — shared payment stage
+- `/success/` — post-payment / booking result
+- `/client/` — client gallery access
+- `/gallery/` — private client Gallery OS
+- `/gallery/demo/` — Spodja gallery experience demo
+- `/studio/` — authenticated Spodja owner Gallery Studio
 
-Put JPGs in `images/` using the names below. A missing photo shows as an empty black tile labelled with the file it expects.
+## What is operational now
 
-| Where | Files |
-|---|---|
-| Home hero | `images/home/hero.jpg` (16:9) |
-| Each page, e.g. `weddings` | `images/weddings/hero.jpg` (16:9), `1.jpg` (21:9 wide), `2.jpg` and `3.jpg` (4:5 portrait), `chapter-1.jpg` to `chapter-4.jpg` (4:3) |
-| Event pages | the same set, in `images/events/baby-shower/`, `images/events/birthday/`, `images/events/lobola/`, `images/events/matric-dance/` |
+The client-gallery backend is live on Supabase. The deployable frontend in this folder is wired to it.
 
-Each page's `hero.jpg` is also its tile on the home and events pages. Keep files around 2400px on the long edge, and under 500 KB where possible.
+- Private client gallery records and sets
+- Private Storage bucket for client delivery assets
+- Hashed gallery access codes and download PINs
+- Short-lived viewer sessions
+- Email-gated gallery access
+- Favorites, multiple lists and notes
+- Submitted album / print / retouch selections
+- Restricted Quick Share links for selected photos only
+- Payment-aware download gating
+- Individual web / high-resolution delivery
+- Download PIN unlocking
+- Batch download API + browser-generated ZIP delivery
+- Gallery activity logging
+- Gallery expiry and queued 7-day / 1-day reminders
+- Print Room order capture and server-side coupon calculations
+- Owner-only Gallery Studio API with private upload tickets
+- Owner controls for galleries, sets, status, payment state, expiry, access codes, PINs and assets
+- PWA / add-to-home-screen support
 
-## Payments (Yoco)
+## External activation still required
 
-How it works:
+The build deliberately does **not** pretend these integrations are live:
 
-1. You quote a client, then open **/studio/** on your site (it's private and not linked anywhere). Enter the studio password, the client's name, the occasion and the total, then click **Create link**.
-2. Send the link by WhatsApp. The client sees two options: **pay 50% to secure the date** or **pay in full**. Either way they pay by card through Yoco.
-3. On the day, the balance can be paid in cash, by EFT, or by card. For card, choose **Balance only** in the Studio page and let the client scan the QR code on your phone.
+1. **Generic non-Grad card / wallet money movement** — connect an approved Yoco / Paystack merchant gateway server-side.
+2. **Outbound reminder delivery** — gallery reminders are queued, but an email / WhatsApp provider must send the queue.
+3. **Automatic print fulfilment** — Print Room orders are captured, but a physical lab / fulfilment workflow still needs to be connected.
 
-Every link is signed, so a client can't change the amount. All payments appear in your Yoco dashboard with the client's name, the occasion and the type (deposit, full or balance).
+Grad House retains its existing server-side Yoco flow where already configured.
 
-### Setup (once)
+## Security model
 
-In Netlify, go to **Project configuration → Environment variables** and add:
+- High-resolution originals can remain in the private `spodja-client-galleries` Storage bucket.
+- Browser clients never receive a Supabase service-role secret.
+- Client gallery database tables are not directly opened to anonymous/authenticated REST access; the controlled Gallery API mediates access.
+- Owner Studio requires a valid Supabase JWT and an active Spodja owner record.
+- Access codes, share tokens and download PINs are stored as hashes.
+- Restricted shares are enforced server-side rather than hidden only in the browser.
 
-| Variable | Value |
-|---|---|
-| `YOCO_SECRET_KEY` | your Yoco **secret** key: `sk_test_…` while testing, `sk_live_…` once your domain is approved |
-| `STUDIO_PASSWORD` | a long password only you know; it unlocks the Studio page |
-| `LINK_SECRET` | any long random text, e.g. 40 random characters; it signs payment links (changing it breaks old links) |
+## Design provenance
 
-Redeploy after adding them. To test, create a link and pay with Yoco's test card (4111 1111 1111 1111, any future expiry, CVV 123). Then swap in your live secret key.
+Pixieset and Eksklusief were used as **capability / experience references only**. No proprietary source code, copied page markup, copyrighted photography or pixel-for-pixel layouts from either service are included.
 
-The secret key only ever lives in Netlify. Never put it in this repo or in the website code. EFT details for the payment page go in `bank` in `src/site.config.mjs`.
-
-## Deploy
-
-- **Connected to this repo:** `netlify.toml` builds with `node build.mjs` and publishes `dist/`.
-- **Drag and drop:** run the build, then drop the `dist/` folder on Netlify. Payments need the repo-connected deploy, because drag-and-drop doesn't include the `netlify/functions` that talk to Yoco.
-
-The booking form uses Netlify Forms. Turn on form detection under Project configuration → Forms, and submissions will appear there.
+Read `BUILD_NOTES.md`, `CLIENT_GALLERY_OS.md`, `QA_REPORT.md`, `PIXIESET_STORY_MAP.md` and `PAYMENT_GATEWAY_HANDOFF.md` before production deployment.

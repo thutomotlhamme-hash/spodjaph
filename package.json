@@ -1,0 +1,12 @@
+{
+  "name": "spodja-ph-vnext",
+  "private": true,
+  "version": "1.1.0",
+  "scripts": {
+    "serve": "python3 -m http.server 4173",
+    "test:e2e": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.55.0"
+  }
+}

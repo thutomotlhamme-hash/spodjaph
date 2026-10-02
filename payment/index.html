@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width,initial-scale=1" name="viewport"/>
+<meta content="#120f0d" name="theme-color"/>
+<meta content="Secure Spodja PH booking and payment stage." name="description"/>
+<title>Secure your booking | Spodja PH</title>
+<link href="/assets/site.css" rel="stylesheet"/>
+<link href="/assets/lane.css" rel="stylesheet"/>
+<link href="/assets/netlify-ui.css" rel="stylesheet"/><link href="/assets/enhance-v10.css" rel="stylesheet"/></head>
+<body class="checkout-page" data-page="payment">
+<header class="topbar scrolled">
+<a aria-label="Spodja PH home" class="brand" href="/"><img class="spodja-brand-mark" src="/assets/branding/spodja-logo-white.png" alt="Spodja PH"/></a>
+<nav class="nav"><a href="/graduation/">Grad House</a><a href="/weddings/">Wedding Lane</a><a href="/events/">Events Avenue</a><a href="/portraits/">Portrait Room</a><a href="/brands/">Brand Desk</a><a href="/book/">The Book</a><a href="/client/">Your Gallery</a></nav>
+<button aria-expanded="false" aria-label="Toggle menu" class="menu">☰</button>
+</header>
+<main class="checkout-stage">
+<section class="checkout-intro">
+<div class="kicker">Spodja secure booking</div>
+<h1>Secure the <em>story.</em></h1>
+<p>Your photography journey stays calm all the way through checkout. We show only the payment options that fit the kind of booking you made.</p>
+<div class="checkout-trust"><span>Booking-linked</span><span>Wallet-first</span><span>Card details stay with the gateway</span></div>
+<div class="checkout-story reveal">
+<div class="kicker">Before you continue</div>
+<p class="checkout-story-line">This is the kind of gallery you're about to get — real Spodja deliveries, no stock.</p>
+<div class="journey-visuals stagger">
+<figure><img alt="Wedding photography by Spodja PH" loading="lazy" src="/assets/portfolio/hd/wedding-lane-1.jpg"/></figure>
+<figure><img alt="Birthday celebration photography by Spodja PH" loading="lazy" src="/assets/portfolio/hd/_DSC0729.jpg"/></figure>
+<figure><img alt="Portrait photography by Spodja PH" loading="lazy" src="/assets/portfolio/hd/portrait-room-1.jpg"/></figure>
+</div>
+</div>
+</section>
+<section aria-live="polite" class="checkout-card">
+<div class="checkout-card-top">
+<div><small>Booking reference</small><strong id="pay-ref">Checking…</strong></div>
+<span class="secure-pill">Secure stage</span>
+</div>
+<div class="checkout-summary" id="checkout-summary"></div>
+<div hidden="" id="pay-fixed">
+<div class="pay-choice-title"><span>Choose how to secure it</span><small>You can settle the balance later.</small></div>
+<div class="pay-plan-grid">
+<label class="pay-plan active"><input checked="" name="pay-plan" type="radio" value="deposit"/><span><b>Reserve with 50%</b><small>Lock the booking with a retainer.</small></span><strong id="deposit-amount">—</strong></label>
+<label class="pay-plan"><input name="pay-plan" type="radio" value="full"/><span><b>Pay in full</b><small>One payment. Done.</small></span><strong id="full-amount">—</strong></label>
+</div>
+<div class="balance-policy" id="balance-policy"></div>
+
+
+
+
+
+
+<div class="provider-title"><strong>Choose payment method</strong><small>Only connected gateways are enabled.</small></div><div class="provider-grid"><button class="provider-btn" data-provider="yoco" type="button">Yoco<small>Card / wallet</small></button><button class="provider-btn" data-provider="paystack" type="button">Paystack<small>Secure checkout</small></button><button class="provider-btn" data-provider="ozow" type="button">Ozow<small>Instant EFT</small></button></div><button class="btn btn-dark provider-checkout" data-provider-checkout="" type="button">Continue to secure checkout →</button><p class="payment-provider-note" data-provider-note="">Checking connected payment gateways…</p></div>
+<div class="quote-gate" hidden="" id="pay-custom">
+<span class="quote-number">01</span>
+<h2>Your coverage needs a final scope first.</h2>
+<p>We’ve saved your booking request. Once the hours, deliverables and final amount are approved, this same payment stage becomes active — without making you start again.</p>
+<div class="quote-flow"><span>Request saved</span><i>→</i><span>Scope confirmed</span><i>→</i><span>Wallet checkout</span></div>
+<a class="btn btn-dark" href="https://wa.me/27625683235" rel="noopener" target="_blank">Continue with Spodja →</a>
+</div>
+<div hidden="" id="pay-grad">
+
+
+
+
+
+
+<div class="provider-title"><strong>Choose payment method</strong><small>Only connected gateways are enabled.</small></div><div class="provider-grid"><button class="provider-btn" data-provider="yoco" type="button">Yoco<small>Card / wallet</small></button><button class="provider-btn" data-provider="paystack" type="button">Paystack<small>Secure checkout</small></button><button class="provider-btn" data-provider="ozow" type="button">Ozow<small>Instant EFT</small></button></div><button class="btn btn-dark provider-checkout" data-provider-checkout="" type="button">Continue to secure checkout →</button><p class="payment-provider-note" data-provider-note="">Checking connected payment gateways…</p></div>
+<div class="status" id="pay-status"></div>
+</section>
+</main>
+<footer class="checkout-footer"><span>SPODJA PH</span><span>Spodja PH</span><span>© <span data-year=""></span></span></footer>
+<script src="/assets/site.js"></script><script src="/assets/payment.js"></script>
+<script src="/assets/enhance-v10.js"></script></body>
+</html>
