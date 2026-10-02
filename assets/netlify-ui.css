@@ -24,8 +24,8 @@ body{font-family:Arial,Helvetica,sans-serif;background:var(--paper);color:#1c171
 .brand{min-width:140px;gap:0;font-weight:400;letter-spacing:0}
 .brand img{display:none!important}
 .brand-live{display:inline-flex;align-items:baseline;gap:10px;white-space:nowrap}
-.brand-live span{font-family:Georgia,'Times New Roman',serif;font-size:31px;font-style:italic;letter-spacing:-.04em;color:#f7f3ef}
-.brand-live b{font-family:Georgia,'Times New Roman',serif;font-size:22px;font-weight:400;letter-spacing:.12em;color:var(--orange)}
+.brand-live span{font-family:"Instrument Serif",Georgia,'Times New Roman',serif;font-size:31px;font-style:italic;letter-spacing:-.04em;color:#f7f3ef}
+.brand-live b{font-family:"Instrument Serif",Georgia,'Times New Roman',serif;font-size:22px;font-weight:400;letter-spacing:.12em;color:var(--orange)}
 .nav{gap:clamp(18px,2.5vw,42px);font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.28em}
 .nav a{opacity:.78;padding:37px 0 34px;border-bottom:1px solid transparent}
 .nav a:hover,.nav a.active{opacity:1;border-bottom-color:rgba(255,255,255,.75)}
@@ -54,7 +54,7 @@ body{font-family:Arial,Helvetica,sans-serif;background:var(--paper);color:#1c171
 .home-live-main:after{content:"";position:absolute;z-index:-1;inset:92px 0 0;background:radial-gradient(circle at 84% 52%,rgba(200,25,49,.06),transparent 27%)}
 .home-live-copy{max-width:800px;position:relative;z-index:2}
 .home-live-logo-note{height:20px;margin-bottom:82px;color:rgba(255,255,255,.30);font-size:9px;text-transform:uppercase;letter-spacing:.24em}
-.home-live h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(72px,8.3vw,132px);font-weight:400;letter-spacing:-.055em;line-height:.88;margin:0;color:#f8f5f1}
+.home-live h1{font-family:"Instrument Serif",Georgia,'Times New Roman',serif;font-size:clamp(72px,8.3vw,132px);font-weight:400;letter-spacing:-.055em;line-height:.88;margin:0;color:#f8f5f1}
 .home-live h1 em{font-weight:400;color:#f0ebe4}
 .home-live-sub{margin:42px 0 0;max-width:520px;color:rgba(255,255,255,.49);font-size:14px;line-height:1.9;letter-spacing:.015em}
 .home-live-guide{position:absolute;right:clamp(25px,4.6vw,72px);bottom:38px;color:rgba(255,255,255,.36);font-size:8px;letter-spacing:.35em;text-transform:uppercase;display:flex;align-items:center;gap:18px;writing-mode:vertical-rl}
@@ -65,7 +65,7 @@ body{font-family:Arial,Helvetica,sans-serif;background:var(--paper);color:#1c171
 .lane-hero{min-height:88svh;padding:150px clamp(24px,5vw,78px) 60px;background:var(--ink);grid-template-columns:1.03fr .97fr}
 .lane-hero:after{background:linear-gradient(90deg,rgba(18,15,13,.98) 0%,rgba(18,15,13,.91) 43%,rgba(18,15,13,.38) 74%,rgba(18,15,13,.16)),linear-gradient(0deg,rgba(18,15,13,.88),transparent 47%)}
 .lane-hero-copy{max-width:830px}
-.lane-hero h1{font-family:Georgia,'Times New Roman',serif;font-size:clamp(63px,7.4vw,116px);font-weight:400;line-height:.91;letter-spacing:-.055em;text-transform:none;margin:16px 0 26px}
+.lane-hero h1{font-family:"Instrument Serif",Georgia,'Times New Roman',serif;font-size:clamp(63px,7.4vw,116px);font-weight:400;line-height:.91;letter-spacing:-.055em;text-transform:none;margin:16px 0 26px}
 .lane-hero h1 em{font-family:inherit;font-weight:400;color:#eee7df;text-transform:none}
 .lane-hero p{max-width:610px;font-size:14px;line-height:1.9;color:rgba(255,255,255,.50)}
 .lane-crumb{font-size:8px;letter-spacing:.22em;color:rgba(255,255,255,.4);margin-bottom:30px}
@@ -79,13 +79,13 @@ body{font-family:Arial,Helvetica,sans-serif;background:var(--paper);color:#1c171
 .lane-nav a,.lane-nav button{border:0;border-radius:0;background:transparent;padding:17px 0 15px;font-size:8px;font-weight:600;letter-spacing:.22em;color:#6f6762;border-bottom:1px solid transparent}
 .lane-nav .active,.lane-nav a:hover,.lane-nav button:hover{background:transparent;color:#171311;border-bottom-color:var(--orange)}
 .lane-intro{background:#f8f4ef;padding-top:clamp(82px,9vw,132px)}
-.lane-intro h2,.journey-head h2,.stories-head h2,.section-head h2,.big{font-family:Georgia,'Times New Roman',serif;font-weight:400;text-transform:none;letter-spacing:-.045em}
+.lane-intro h2,.journey-head h2,.stories-head h2,.section-head h2,.big{font-family:"Instrument Serif",Georgia,'Times New Roman',serif;font-weight:400;text-transform:none;letter-spacing:-.045em}
 .lane-intro h2{font-size:clamp(48px,6.5vw,88px);line-height:.96}
 .lane-intro p{font-size:13px;color:#817873;line-height:1.9}
 .promise-row{background:#ddd6d0;border-color:#ddd6d0;margin-top:64px}
 .promise-row article{background:#f8f4ef;min-height:195px;padding:30px}
 .promise-row small{color:var(--orange);font-size:9px;letter-spacing:.18em}
-.promise-row h3{font-family:Georgia,'Times New Roman',serif;font-weight:400;font-size:29px;margin:35px 0 12px}
+.promise-row h3{font-family:"Instrument Serif",Georgia,'Times New Roman',serif;font-weight:400;font-size:29px;margin:35px 0 12px}
 
 /* Booking journey — keep mechanics; style like premium editorial forms */
 .journey{background:#e8e1d9;padding-top:clamp(82px,9vw,130px)}
@@ -96,7 +96,7 @@ body{font-family:Arial,Helvetica,sans-serif;background:var(--paper);color:#1c171
 .journey-head p{font-size:13px;color:#766d67;line-height:1.85}
 .journey-shell{gap:16px;max-width:1380px}
 .journey-aside{border-radius:0;background:#171311;padding:38px;box-shadow:none;top:158px}
-.journey-aside h3{font-family:Georgia,'Times New Roman',serif;font-weight:400;font-size:clamp(32px,3vw,46px);letter-spacing:-.035em;line-height:1.02}
+.journey-aside h3{font-family:"Instrument Serif",Georgia,'Times New Roman',serif;font-weight:400;font-size:clamp(32px,3vw,46px);letter-spacing:-.035em;line-height:1.02}
 .journey-form{border-radius:0;border:1px solid rgba(31,25,22,.13);box-shadow:none;background:#fbf8f3;padding:clamp(27px,4vw,46px)}
 .booking-steps{border-color:#ddd6d0;gap:22px}
 .step-chip{border-radius:0;background:transparent;padding:7px 0;color:#968d87;font-size:8px;letter-spacing:.16em;border-bottom:1px solid transparent}
@@ -107,7 +107,7 @@ body{font-family:Arial,Helvetica,sans-serif;background:var(--paper);color:#1c171
 .package-picks{gap:10px}
 .package-pick label{border-radius:0;min-height:156px;background:#fff;padding:19px;box-shadow:none!important}
 .package-pick label:hover{transform:none;border-color:#8f8781}
-.package-pick label b{font-family:Georgia,'Times New Roman',serif;font-size:21px;font-weight:400}
+.package-pick label b{font-family:"Instrument Serif",Georgia,'Times New Roman',serif;font-size:21px;font-weight:400}
 .package-pick label small{font-size:10px;line-height:1.55}
 .package-pick input:checked+label{border:1px solid var(--orange);box-shadow:inset 3px 0 0 var(--orange)!important}
 .field label{font-size:8px;letter-spacing:.18em;color:#665d57}
@@ -126,25 +126,25 @@ body{font-family:Arial,Helvetica,sans-serif;background:var(--paper);color:#1c171
 .story-main,.story-small{background:#1c1816}
 .story-main img,.story-small img{filter:saturate(.82)}
 .story-copy small{color:#e4495d;font-size:8px;letter-spacing:.18em}
-.story-copy h3{font-family:Georgia,'Times New Roman',serif;font-weight:400;text-transform:none;letter-spacing:-.03em}
+.story-copy h3{font-family:"Instrument Serif",Georgia,'Times New Roman',serif;font-weight:400;text-transform:none;letter-spacing:-.03em}
 
 /* Grad House gets same visual shell without touching booking logic */
 .hero.grad-hero{min-height:88svh;padding-top:150px;background:#120f0d}
 .grad-hero .hero-media{filter:saturate(.78);opacity:.75}
-.hero h1,.display{font-family:Georgia,'Times New Roman',serif;font-weight:400;text-transform:none;letter-spacing:-.055em;line-height:.9}
+.hero h1,.display{font-family:"Instrument Serif",Georgia,'Times New Roman',serif;font-weight:400;text-transform:none;letter-spacing:-.055em;line-height:.9}
 .outline{-webkit-text-stroke:0;color:#eee8e1;font-style:italic}
 .section.paper{background:#f8f4ef}
 .package,.card{border-radius:0;box-shadow:none;background:#fff}
 .package.featured{border:1px solid var(--orange);transform:none}
 .package .badge,.tag{border-radius:0}
-.package h3,.card h3{font-family:Georgia,'Times New Roman',serif;font-weight:400;text-transform:none}
+.package h3,.card h3{font-family:"Instrument Serif",Georgia,'Times New Roman',serif;font-weight:400;text-transform:none}
 
 /* Checkout / success */
 .checkout-page{background:#120f0d}
 .checkout-page:before{opacity:.20;filter:saturate(.65)}
 .checkout-page:after{background:linear-gradient(90deg,rgba(18,15,13,.98),rgba(18,15,13,.72)),radial-gradient(circle at 82% 20%,rgba(200,25,49,.07),transparent 28%)}
 .checkout-stage{padding-top:150px}
-.checkout-intro h1{font-family:Georgia,'Times New Roman',serif;font-weight:400;text-transform:none;letter-spacing:-.055em;line-height:.92}
+.checkout-intro h1{font-family:"Instrument Serif",Georgia,'Times New Roman',serif;font-weight:400;text-transform:none;letter-spacing:-.055em;line-height:.92}
 .checkout-intro h1 em{font-family:inherit;color:#eee7df}
 .checkout-intro>p{font-size:13px;line-height:1.9;color:rgba(255,255,255,.5)}
 .checkout-trust span{border-radius:0;font-size:8px;letter-spacing:.14em}
@@ -161,19 +161,19 @@ body{font-family:Arial,Helvetica,sans-serif;background:var(--paper);color:#1c171
 /* Client access */
 .gallery-access-page{background:#120f0d!important}
 .gallery-access-bg{opacity:.20!important;filter:saturate(.65)!important}
-.gallery-access-copy h1{font-family:Georgia,'Times New Roman',serif!important;font-weight:400!important;letter-spacing:-.05em!important}
+.gallery-access-copy h1{font-family:"Instrument Serif",Georgia,'Times New Roman',serif!important;font-weight:400!important;letter-spacing:-.05em!important}
 .gallery-access-card{border-radius:0!important;box-shadow:none!important}
 
 /* Gallery: keep Pixieset-style functionality, make chrome Spodja */
 .gallery-view{--gallery-accent:#c81931;--gallery-dark:#120f0d}
 .gallery-topbar{background:rgba(18,15,13,.96)!important;color:#fff!important}
-.gallery-logo{font-family:Georgia,'Times New Roman',serif!important;font-style:italic!important;letter-spacing:-.02em!important}
-.gallery-cover-copy h1,.gallery-intro-copy h2,.gallery-dialog h2{font-family:Georgia,'Times New Roman',serif!important;font-weight:400!important}
+.gallery-logo{font-family:"Instrument Serif",Georgia,'Times New Roman',serif!important;font-style:italic!important;letter-spacing:-.02em!important}
+.gallery-cover-copy h1,.gallery-intro-copy h2,.gallery-dialog h2{font-family:"Instrument Serif",Georgia,'Times New Roman',serif!important;font-weight:400!important}
 .gallery-setbar button.active,.quick-select-toggle.active{color:#c81931!important;border-color:#c81931!important}
 
 /* Footer */
 .footer{background:#0e0c0b;color:rgba(255,255,255,.62);border-top:1px solid rgba(255,255,255,.06);padding:30px clamp(22px,5vw,78px);font-size:9px;letter-spacing:.18em;text-transform:uppercase}
-.footer strong{font-family:Georgia,'Times New Roman',serif;font-style:italic;font-weight:400;font-size:19px;text-transform:none;letter-spacing:-.02em;color:#fff}
+.footer strong{font-family:"Instrument Serif",Georgia,'Times New Roman',serif;font-style:italic;font-weight:400;font-size:19px;text-transform:none;letter-spacing:-.02em;color:#fff}
 
 @media(max-width:1050px){
   .nav{gap:18px;letter-spacing:.16em}
