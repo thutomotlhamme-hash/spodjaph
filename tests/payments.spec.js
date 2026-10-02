@@ -88,17 +88,18 @@ async function fillWeddingTraditional4h(page) {
 
 // ---------------------------------------------------------------- today's live behaviour
 
-test.describe('today: booking buttons hand off to WhatsApp', () => {
+test.describe('Book on WhatsApp: the second choice on every form', () => {
   test('Grad House sends package, campus, date, time and name to WhatsApp', async ({ page }) => {
     const calls = await backend(page);
     await page.goto('/graduation/');
     await fillGrad(page);
-    await page.getByRole('button', { name: /Continue on WhatsApp/i }).click();
+    await page.getByRole('button', { name: 'Book on WhatsApp' }).click();
     const sent = await page.evaluate(() => window.__opened);
     expect(sent).toHaveLength(1);
     const text = decodeURIComponent(sent[0]);
     expect(sent[0]).toContain('wa.me/27625683235');
     for (const bit of ['SIGNATURE', 'University of Pretoria', '2026-11-14', 'Naledi Mokoena']) expect(text).toContain(bit);
+    expect(text).toContain('send me the payment link');
     expect(calls['grad-create-booking']).toBeUndefined(); // no slot is held, no payment started
   });
 
@@ -108,7 +109,7 @@ test.describe('today: booking buttons hand off to WhatsApp', () => {
     await fillWeddingTraditional4h(page);
     await expect(page.locator('.live-total')).toContainText('R 7,399'); // R5,000 package + R2,399 book
     await expect(page.locator('.live-total')).toContainText('R 3,700'); // 50% to reserve
-    await page.getByRole('button', { name: /Continue on WhatsApp/i }).click();
+    await page.getByRole('button', { name: 'Book on WhatsApp' }).click();
     const text = decodeURIComponent((await page.evaluate(() => window.__opened))[0] || '');
     expect(text).toContain('Traditional/Lobola · 4h · R5,000');
     expect(text).toContain('Lerato Dlamini');
@@ -124,11 +125,11 @@ test.describe('today: booking buttons hand off to WhatsApp', () => {
     await page.fill('[name="contact_name"]', 'Kagiso Molefe');
     await page.fill('[name="contact_phone"]', '0711112222');
     // Incomplete (no start time / email): the browser blocks it and nothing is sent.
-    await page.locator('form[data-lane-form] button[type="submit"]').click();
+    await page.getByRole('button', { name: 'Book on WhatsApp' }).click();
     expect(await page.evaluate(() => window.__opened)).toHaveLength(0);
     await page.fill('[name="event_time"]', '11:00');
     await page.fill('[name="contact_email"]', 'kagiso@example.com');
-    await page.locator('form[data-lane-form] button[type="submit"]').click();
+    await page.getByRole('button', { name: 'Book on WhatsApp' }).click();
     const text = decodeURIComponent((await page.evaluate(() => window.__opened))[0] || '');
     expect(text).toMatch(/Lobola/);
     expect(text).toContain('Kagiso Molefe');
@@ -137,16 +138,13 @@ test.describe('today: booking buttons hand off to WhatsApp', () => {
 
 // ---------------------------------------------------------------- Yoco, payment-first
 
-test.describe('Yoco: payment-first journeys (scripts already in the site)', () => {
-  // whatsapp-launch.js intercepts submit first; block it to exercise the
-  // booking -> payment -> Yoco path that site.js and grad.js implement.
-  test.beforeEach(async ({ page }) => { await page.route('**/assets/whatsapp-launch.js', (r) => r.fulfill({ contentType: 'text/javascript', body: '' })); });
+test.describe('Pay & book: Yoco is the first choice on every form', () => {
 
   test('Grad House: hold slot → Yoco → verified success', async ({ page }) => {
     const calls = await backend(page);
     await page.goto('/graduation/');
     await fillGrad(page);
-    await page.locator('#reserve').click();
+    await page.getByRole('button', { name: /Pay & reserve my time/ }).click();
     await expect(page.locator('#hold-box')).toContainText('GH-2041');
     expect(calls['grad-create-booking'][0]).toMatchObject({ package_slug: 'signature', full_name: 'Naledi Mokoena', accepted_policies: true, requested_starts_at: '2026-11-14T15:30:00+02:00' });
 
@@ -168,7 +166,8 @@ test.describe('Yoco: payment-first journeys (scripts already in the site)', () =
       const calls = await backend(page);
       await page.goto('/weddings/');
       await fillWeddingTraditional4h(page);
-      await page.locator('form[data-lane-form] button[type="submit"]').click();
+      await page.getByRole('button', { name: /Pay & book/ }).click();
+      expect(await page.evaluate(() => window.__opened)).toHaveLength(0); // no WhatsApp hand-off
       await expect(page).toHaveURL(/\/payment\/\?ref=SPJ-W100&token=ck_w100/);
       expect(calls['spodja-create-enquiry'][0]).toMatchObject({ service_type: 'weddings', client_type: 'traditional', offer_key: 'wedding-traditional-4h', contact_name: 'Lerato Dlamini' });
       expect(calls['spodja-create-enquiry'][0].coverage_needs).toContain('Premium photography book · +R2,399');

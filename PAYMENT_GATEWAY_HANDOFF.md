@@ -40,3 +40,13 @@ This allows a sneak peek / proofing experience to remain available while final h
 - Generic non-Grad merchant charging is still gateway-pending.
 - No browser page stores or handles raw card details.
 - Do not change the pending state to a fake `paid` result merely to make the demo look complete.
+
+## October 2026: payment-first booking and the command centre
+
+- Every booking form offers two choices: **Pay & book** (Yoco, the default) and **Book on WhatsApp**. Brands stay quote-first (**Send my brief**).
+- `/command/` (owner sign-in) is the command centre:
+  - Calendar of shoots and website enquiries.
+  - Bookings with balances (website and Grad House payments sync in automatically).
+  - Payment links, plus manual cash/card/EFT/refund records and an activity log.
+- Payment links open `/pay/?l=<token>`, which goes to Yoco hosted checkout. A link can bundle several bookings; once Yoco confirms the payment, each booking gets its share in the ledger.
+- WhatsApp clients: confirm the booking in the command centre, then send the deposit or balance link from the booking ("Send on WhatsApp").

@@ -345,3 +345,28 @@ a.s-tile:hover .s-tile-copy h3 { transform: translateX(6px); }
 }
 .location-result b { display: block; }
 .location-result small { display: block; margin-top: 2px; font-size: 12.5px; color: var(--graphite-2); }
+
+/* ---------- Two ways to book: pay now, or WhatsApp first ---------- */
+.s-choice { display: grid; grid-template-columns: 1.2fr 1fr; gap: 10px; margin-top: 22px; }
+.s-choice > * { width: 100%; margin: 0; }
+.s-book .s-btn-wa { min-height: 52px; border: 1px solid var(--graphite); background: transparent; color: var(--graphite); }
+.s-book .s-btn-wa::before { content: ""; width: 16px; height: 16px; background: currentColor; -webkit-mask: var(--wa-icon) center / contain no-repeat; mask: var(--wa-icon) center / contain no-repeat; }
+.s-book .s-btn-wa:hover { background: var(--graphite); color: #fff; }
+.s-choice-note { margin: 12px 0 0; font-size: 13px; line-height: 1.55; color: var(--graphite-2); }
+:root { --wa-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4c1.7.7 2.4.8 3.2.7a2.8 2.8 0 0 0 1.8-1.3 2.3 2.3 0 0 0 .2-1.3c-.1-.1-.3-.2-.5-.3z'/%3E%3C/svg%3E"); }
+@media (max-width: 560px) { .s-choice { grid-template-columns: 1fr; } }
+
+/* ---------- /pay/: one payment link ---------- */
+.s-pay { min-height: 100svh; display: grid; place-items: center; padding: clamp(110px, 14vw, 160px) 16px 72px; }
+.s-pay-card { width: min(520px, 100%); background: #fff; color: var(--graphite); padding: clamp(28px, 5vw, 48px); border: 1px solid var(--line-dark); }
+.s-pay-card .s-h2 { color: var(--graphite); margin: 14px 0 10px; }
+.s-pay-desc { margin: 0 0 22px; color: var(--graphite-2); font-size: 15.5px; line-height: 1.55; }
+.s-pay-meta { display: grid; gap: 0; margin: 0 0 20px; border-top: 1px solid var(--line-dark); }
+.s-pay-meta div { display: flex; justify-content: space-between; align-items: baseline; padding: 14px 0; border-bottom: 1px solid var(--line-dark); }
+.s-pay-meta dt { font: 600 11px/1 var(--sans); letter-spacing: 0.14em; text-transform: uppercase; color: var(--graphite-2); }
+.s-pay-meta dd { margin: 0; font-weight: 600; }
+.s-pay-amount { font-family: var(--serif); font-weight: 400 !important; font-size: 34px; letter-spacing: -0.01em; }
+.s-pay-btn { width: 100%; margin-top: 8px; }
+.s-pay-fine, .s-pay-help { margin: 14px 0 0; font-size: 12.5px; line-height: 1.55; color: var(--graphite-2); }
+.s-pay-help a { color: var(--graphite); text-decoration: underline; text-underline-offset: 3px; }
+.s-pay { background: var(--ink); }

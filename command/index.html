@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<meta name="robots" content="noindex,nofollow"/>
+<meta name="theme-color" content="#0e0c0b"/>
+<title>Command Centre | Spodja PH</title>
+<link rel="icon" type="image/png" href="/assets/icons/spodja-192.png"/>
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/instrument-serif-latin-400-normal.woff2" crossorigin/>
+<link rel="stylesheet" href="/assets/v11.css"/>
+<link rel="stylesheet" href="/assets/command.css"/>
+</head>
+<body class="cc">
+<header class="cc-top">
+  <a class="cc-brand" href="/"><img src="/assets/branding/spodja-logo-white.png" alt="Spodja PH"/><span>Command centre</span></a>
+  <nav class="cc-top-nav"><a href="/studio/">Galleries</a><button type="button" id="signout" hidden>Sign out</button></nav>
+</header>
+
+<main class="cc-main">
+  <section class="cc-auth" id="auth" hidden>
+    <span class="s-eyebrow">Owner access</span>
+    <h1 class="s-h2">Bookings, payments, <em>one place.</em></h1>
+    <p>Sign in with the Spodja owner email. We’ll send a secure sign-in link.</p>
+    <form id="login"><input type="email" id="login-email" autocomplete="email" required placeholder="you@example.com"/><button class="s-btn s-btn-red" type="submit">Send sign-in link</button></form>
+    <div class="status" id="auth-status"></div>
+  </section>
+
+  <section id="app" hidden>
+    <div class="cc-stats" id="stats"></div>
+
+    <div class="cc-bar">
+      <div class="cc-tabs" role="tablist">
+        <button role="tab" data-tab="calendar" class="on">Calendar</button>
+        <button role="tab" data-tab="bookings">Bookings</button>
+        <button role="tab" data-tab="links">Payment links</button>
+        <button role="tab" data-tab="activity">Activity</button>
+      </div>
+      <div class="cc-actions">
+        <button class="cc-btn" type="button" id="refresh" title="Refresh">↻</button>
+        <button class="cc-btn cc-btn-dark" type="button" data-new-job>+ New booking</button>
+      </div>
+    </div>
+
+    <div class="cc-panel" data-panel="calendar">
+      <div class="cc-cal-head"><button class="cc-btn" data-cal="-1" aria-label="Previous month">‹</button><h2 id="cal-title"></h2><button class="cc-btn" data-cal="1" aria-label="Next month">›</button><button class="cc-btn" data-cal="0">Today</button></div>
+      <div class="cc-cal" id="calendar"></div>
+      <p class="cc-legend"><span><i class="k-paid"></i>Cleared</span><span><i class="k-part"></i>Part paid</span><span><i class="k-due"></i>Unpaid</span><span><i class="k-enq"></i>Website enquiry</span></p>
+      <div class="cc-day" id="day"></div>
+    </div>
+
+    <div class="cc-panel" data-panel="bookings" hidden>
+      <div class="cc-filters">
+        <div class="cc-seg" id="job-filter"><button data-f="outstanding" class="on">Outstanding</button><button data-f="upcoming">Upcoming</button><button data-f="all">All</button></div>
+        <input type="search" id="job-search" placeholder="Search client, booking or reference"/>
+      </div>
+      <div class="cc-select-bar" id="select-bar" hidden><span id="select-count"></span><button class="cc-btn cc-btn-dark" data-bulk="link">Payment link for selected</button><button class="cc-btn" data-bulk="pay">Record payment for selected</button><button class="cc-btn" data-bulk="clear">Clear selection</button></div>
+      <div class="cc-table-wrap"><table class="cc-table"><thead><tr><th></th><th>Date</th><th>Client</th><th>Booking</th><th class="r">Total</th><th class="r">Paid</th><th class="r">Outstanding</th></tr></thead><tbody id="jobs"></tbody></table></div>
+      <h3 class="cc-sub">Website enquiries waiting</h3>
+      <div id="enquiries" class="cc-list"></div>
+    </div>
+
+    <div class="cc-panel" data-panel="links" hidden>
+      <div id="links" class="cc-list"></div>
+    </div>
+
+    <div class="cc-panel" data-panel="activity" hidden>
+      <div id="activity" class="cc-log"></div>
+    </div>
+  </section>
+</main>
+
+<!-- Booking: details, payments and links for one job -->
+<dialog class="cc-dialog" id="job-dialog">
+  <form method="dialog" class="cc-dialog-card" id="job-form">
+    <button class="cc-x" value="cancel" type="submit" formnovalidate aria-label="Close">×</button>
+    <span class="s-eyebrow" id="job-eyebrow">New booking</span>
+    <h2 class="cc-h" id="job-title">Booking details</h2>
+    <input type="hidden" name="id"/>
+    <div class="cc-grid">
+      <label>Client name<input name="client_name" required/></label>
+      <label>Phone<input name="client_phone" inputmode="tel" placeholder="082 123 4567"/></label>
+      <label>Email<input name="client_email" type="email"/></label>
+      <label>Service<select name="service_type"><option value="weddings">Wedding</option><option value="events">Event</option><option value="graduation">Graduation</option><option value="portraits">Portrait</option><option value="brands">Brand</option><option value="other">Other</option></select></label>
+      <label class="w2">Booking<input name="title" required placeholder="Traditional / Lobola · 4h"/></label>
+      <label>Shoot date<input name="shoot_date" type="date"/></label>
+      <label>Start time<input name="start_time" type="time"/></label>
+      <label class="w2">Venue<input name="venue"/></label>
+      <label>Total (R)<input name="total" type="number" min="0" step="0.01" required/></label>
+      <label>Status<select name="status"><option value="confirmed">Confirmed</option><option value="tentative">Tentative</option><option value="shot">Shot</option><option value="delivered">Delivered</option><option value="cancelled">Cancelled</option></select></label>
+      <label class="w2">Notes<textarea name="notes" rows="2"></textarea></label>
+    </div>
+    <div class="cc-row"><button class="cc-btn cc-btn-dark" type="button" id="job-save">Save booking</button><span class="cc-msg" id="job-msg"></span></div>
+
+    <div id="job-money" hidden>
+      <div class="cc-balance" id="job-balance"></div>
+      <h3 class="cc-sub">Payments</h3>
+      <div id="job-ledger" class="cc-ledger"></div>
+      <div class="cc-two">
+        <div class="cc-box">
+          <h4>Send a payment link</h4>
+          <div class="cc-seg" id="link-presets"></div>
+          <label>Amount (R)<input id="link-amount" type="number" min="2" step="0.01"/></label>
+          <label>What it’s for<input id="link-desc" placeholder="Balance · Traditional / Lobola · 4h"/></label>
+          <button class="cc-btn cc-btn-dark" type="button" id="link-create">Create link</button>
+        </div>
+        <div class="cc-box">
+          <h4>Record a payment</h4>
+          <div class="cc-seg" id="pay-method"><button type="button" data-m="cash" class="on">Cash</button><button type="button" data-m="card">Card</button><button type="button" data-m="eft">EFT</button><button type="button" data-m="other">Other</button><button type="button" data-m="refund">Refund</button></div>
+          <label>Amount (R)<input id="pay-amount" type="number" min="0.01" step="0.01"/></label>
+          <label>Date<input id="pay-date" type="date"/></label>
+          <label>Note<input id="pay-note" placeholder="Paid on the day"/></label>
+          <button class="cc-btn" type="button" id="pay-record">Record payment</button>
+        </div>
+      </div>
+      <h3 class="cc-sub">History</h3>
+      <div id="job-log" class="cc-log"></div>
+    </div>
+  </form>
+</dialog>
+
+<!-- Bundle: one link or one payment across several bookings -->
+<dialog class="cc-dialog" id="bundle-dialog">
+  <form method="dialog" class="cc-dialog-card">
+    <button class="cc-x" value="cancel" type="submit" formnovalidate aria-label="Close">×</button>
+    <span class="s-eyebrow" id="bundle-eyebrow">Bundle</span>
+    <h2 class="cc-h" id="bundle-title">Clear several bookings</h2>
+    <div id="bundle-rows" class="cc-bundle"></div>
+    <div class="cc-bundle-total"><span>Total</span><strong id="bundle-total"></strong></div>
+    <div id="bundle-link-fields"><label>What it’s for<input id="bundle-desc"/></label></div>
+    <div id="bundle-pay-fields" hidden>
+      <div class="cc-seg" id="bundle-method"><button type="button" data-m="cash" class="on">Cash</button><button type="button" data-m="card">Card</button><button type="button" data-m="eft">EFT</button><button type="button" data-m="other">Other</button></div>
+      <label>Note<input id="bundle-note"/></label>
+    </div>
+    <div class="cc-row"><button class="cc-btn cc-btn-dark" type="button" id="bundle-go">Create link</button><span class="cc-msg" id="bundle-msg"></span></div>
+  </form>
+</dialog>
+
+<!-- Link ready to share -->
+<dialog class="cc-dialog" id="share-dialog">
+  <form method="dialog" class="cc-dialog-card cc-share">
+    <button class="cc-x" value="cancel" type="submit" aria-label="Close">×</button>
+    <span class="s-eyebrow">Payment link ready</span>
+    <h2 class="cc-h" id="share-amount"></h2>
+    <p id="share-desc"></p>
+    <input id="share-url" readonly/>
+    <div class="cc-row"><button class="cc-btn cc-btn-dark" type="button" id="share-wa">Send on WhatsApp</button><button class="cc-btn" type="button" id="share-copy">Copy link</button></div>
+  </form>
+</dialog>
+
+<script src="/assets/command.js" type="module"></script>
+</body>
+</html>

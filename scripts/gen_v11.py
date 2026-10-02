@@ -132,6 +132,29 @@ def h1_of(s):
     return inner
 
 
+WA_NOTE = "Prefer to chat first? Book on WhatsApp and we’ll confirm your date and send a secure payment link."
+
+
+def choices(form, grad=False, quote=False):
+    """Two clear ways to book: pay now through Yoco, or confirm on WhatsApp first."""
+    pay = "Pay &amp; reserve my time →" if grad else "Send my brief →" if quote else "Pay &amp; book →"
+    note = "We’ll reply with a quote and a secure payment link. Prefer to talk it through? Book on WhatsApp." if quote else ("Pay securely by card, Apple Pay or Google Pay through Yoco to lock in your time. " if grad
+            else "Pay a 50% deposit or the full amount securely by card, Apple Pay or Google Pay through Yoco. ") + WA_NOTE
+    block = (f'<div class="s-choice">{{submit}}'
+             f'<button class="s-btn s-btn-wa" type="button" data-whatsapp-book>Book on WhatsApp</button></div>'
+             f'<p class="s-choice-note">{note}</p>')
+    if grad:
+        form, n = re.subn(r'(<button class="btn btn-dark" id="reserve" type="submit">)Continue on WhatsApp →</button>(<div class="hold" id="hold-box"></div>)<p class="helper">.*?</p>',
+                          lambda m: block.replace("{submit}", m.group(1) + pay + "</button>") + m.group(2), form, flags=re.S)
+    else:
+        form = re.sub(r'<div class="flow-note">.*?</div>', "", form, count=1, flags=re.S)
+        form, n = re.subn(r'(<button class="btn btn-dark[^"]*" type="submit">)Continue on WhatsApp →</button>',
+                          lambda m: block.replace("{submit}", m.group(1) + pay + "</button>"), form)
+    if n != 1:
+        raise SystemExit("booking choices: submit button not found")
+    return form
+
+
 # ---------------------------------------------------------------- lanes
 LANES = {
     "weddings": dict(
@@ -140,7 +163,7 @@ LANES = {
         hero="/assets/portfolio/hd/wedding-lane-1.jpg", pos="50% 30%",
         work_h="Every part of the day.",
         book_h="Build your <em>coverage.</em>",
-        book_p="Choose the kind of wedding, pick a package and add what you need. Your choices carry straight into WhatsApp to confirm.",
+        book_p="Choose the kind of wedding, pick a package and add what you need. Pay securely to book, or confirm on WhatsApp first.",
     ),
     "events": dict(
         title="Events | Spodja PH", eyebrow="Events Avenue",
@@ -148,7 +171,7 @@ LANES = {
         hero="/assets/portfolio/hd/_DSC2179.jpg", pos="50% 30%",
         work_h="Celebrations, kept.",
         book_h="Plan your <em>event.</em>",
-        book_p="Choose the celebration, pick a package and the extras you want. Your choices carry straight into WhatsApp to confirm.",
+        book_p="Choose the celebration, pick a package and the extras you want. Pay securely to book, or confirm on WhatsApp first.",
     ),
     "portraits": dict(
         title="Portraits | Spodja PH", eyebrow="Portrait Room",
@@ -156,7 +179,7 @@ LANES = {
         hero="/assets/portfolio/hd/portrait-room-1.jpg", pos="50% 22%",
         work_h="You, intentionally.",
         book_h="Book your <em>session.</em>",
-        book_p="Choose the kind of portrait, pick a package and add what you need. Your choices carry straight into WhatsApp to confirm.",
+        book_p="Choose the kind of portrait, pick a package and add what you need. Pay securely to book, or confirm on WhatsApp first.",
     ),
     "brands": dict(
         title="Brands | Spodja PH", eyebrow="Brand Desk",
@@ -164,14 +187,14 @@ LANES = {
         hero="/assets/portfolio/event-lobola.jpg", pos="50% 35%",
         work_h="Content that works.",
         book_h="Brief us <em>once.</em>",
-        book_p="Tell us what the shoot is for, choose the coverage and add deliverables. Your brief carries straight into WhatsApp to confirm.",
+        book_p="Tell us what the shoot is for, choose the coverage and add deliverables. We reply with a quote and a secure payment link.",
     ),
 }
 
 out = {}
 for slug, cfg in LANES.items():
     s = read(f"{slug}/index.html")
-    form = extract(r"<form\b.*?</form>", s, f"{slug} form")
+    form = choices(extract(r"<form\b.*?</form>", s, f"{slug} form"), quote=slug == "brands")
     desc = re.search(r'<meta content="([^"]*)" name="description"', s)
     desc = desc.group(1) if desc else cfg["lede"]
     imgs = list(dict.fromkeys(re.findall(r'src="(/assets/portfolio/[^"]+)"', s)))
@@ -191,14 +214,14 @@ for slug, cfg in LANES.items():
 
 # ---------------------------------------------------------------- graduation
 s = read("graduation/index.html")
-form = extract(r'<form class="form reveal" id="grad-form".*?</form>', s, "grad form")
+form = choices(extract(r'<form class="form reveal" id="grad-form".*?</form>', s, "grad form"), grad=True)
 policies = re.findall(r'<article class="policy-card"><strong>(.*?)</strong>(.*?)</article>', s, re.S)
 policy_html = "".join(f'<details class="s-policy"><summary>{t}</summary>{body}</details>' for t, body in policies)
 gimgs = list(dict.fromkeys(re.findall(r'src="(/assets/portfolio/[^"]+)"', s)))
 gdesc = re.search(r'<meta content="([^"]*)" name="description"', s)
 main = "\n".join([
     hero("/assets/portfolio/hd/grad-house-1.jpg", "The Grad House", h1_of(s),
-         "Choose your session, campus, date and a live time. Then confirm on WhatsApp in one tap.",
+         "Choose your session, campus, date and a live time. Then pay securely to lock it in, or book on WhatsApp.",
          ("#book", "Book my shoot"), ("#packages", "See packages"), "50% 24%", SLIDES["graduation"]),
     """<section class="s-bay s-bay-2" id="packages">
   <div class="s-head s-rise"><div><span class="s-eyebrow">Packages</span><h2 class="s-h2">Choose your <em>story.</em></h2></div><p>Live prices. Every package includes edited high-resolution images in a private gallery.</p></div>
@@ -206,7 +229,7 @@ main = "\n".join([
 </section>""",
     work(gimgs[1:] + gimgs[:1], "The Grad House look."),
     f"""<section class="s-book" id="book">
-  <div class="s-head"><div><span class="s-eyebrow">Book</span><h2 class="s-h2">Book your <em>shoot.</em></h2></div><p>Pick a package, find your campus, choose a live time, then confirm on WhatsApp.</p></div>
+  <div class="s-head"><div><span class="s-eyebrow">Book</span><h2 class="s-h2">Book your <em>shoot.</em></h2></div><p>Pick a package, find your campus and choose a live time. Pay securely to reserve it, or book on WhatsApp.</p></div>
   <div class="s-book-wide">
     <aside>
       <div class="summary-box" id="package-summary"><small>Choose a package to see details.</small></div>
@@ -263,7 +286,7 @@ main = "\n".join([
   <div class="s-head s-rise"><div><span class="s-eyebrow">How it works</span><h2 class="s-h2">Three steps. <em>No guesswork.</em></h2></div></div>
   <div class="s-wrap s-steps s-stagger">
     <div class="s-step"><b>01</b><h3>Choose</h3><p>Pick your shoot and a package with clear prices and what's included.</p></div>
-    <div class="s-step"><b>02</b><h3>Book</h3><p>Add your date and details, then confirm on WhatsApp. Your choices are already filled in.</p></div>
+    <div class="s-step"><b>02</b><h3>Book</h3><p>Add your date and details, then pay a deposit securely or book on WhatsApp. Either way, your choices come with you.</p></div>
     <div class="s-step"><b>03</b><h3>Receive</h3><p>Your edited photos arrive in a private online gallery to view, download and share.</p></div>
   </div>
 </section>""",
@@ -277,6 +300,26 @@ out["index.html"] = page("home", "Spodja PH — We Capture Your Story",
                          "Spodja PH — photography and visual content for graduation, weddings, events, portraits and brands across Gauteng.",
                          "/", main, ["/assets/site.js", "/assets/v11.js"], "/assets/portfolio/hd/_DSC2179.jpg")
 
+# ---------------------------------------------------------------- payment link (/pay/)
+main = """<section class="s-book s-pay">
+  <div class="s-pay-card" data-pay>
+    <span class="s-eyebrow">Secure payment</span>
+    <h1 class="s-h2" data-pay-title>Loading your payment…</h1>
+    <p class="s-pay-desc" data-pay-desc></p>
+    <dl class="s-pay-meta" data-pay-meta hidden>
+      <div><dt>Amount</dt><dd class="s-pay-amount" data-pay-amount></dd></div>
+      <div><dt>Reference</dt><dd data-pay-ref></dd></div>
+    </dl>
+    <div aria-live="polite" class="status" data-pay-status></div>
+    <button class="s-btn s-btn-red s-pay-btn" type="button" data-pay-btn hidden>Pay securely →</button>
+    <p class="s-pay-fine">Card, Apple Pay and Google Pay, processed by Yoco. Spodja PH never sees or stores your card details.</p>
+    <p class="s-pay-help">Questions about this payment? <a href="https://wa.me/""" + WHATSAPP + """" target="_blank" rel="noopener">Message us on WhatsApp</a>.</p>
+  </div>
+</section>"""
+out["pay/index.html"] = page("pay", "Secure payment | Spodja PH", "Pay your Spodja PH booking securely.", "", main,
+                             ["/assets/site.js", "/assets/pay.js"]).replace("<head>", '<head>\n<meta name="robots" content="noindex"/>', 1)
+
 for rel, content in out.items():
+    (ROOT / rel).parent.mkdir(parents=True, exist_ok=True)
     (ROOT / rel).write_text(content)
     print("wrote", rel, len(content))
