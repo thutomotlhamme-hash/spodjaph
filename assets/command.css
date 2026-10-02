@@ -168,3 +168,15 @@ body.cc { background: var(--paper); color: var(--graphite); min-height: 100svh; 
   .cc-bundle-row { grid-template-columns: 1fr; }
 }
 @media (max-width: 640px) { .cc-balance span { font-size: 9.5px; letter-spacing: 0.1em; } .cc-balance div { padding: 12px 10px; } }
+
+/* Records: read-only view of everything */
+.cc-rec td { white-space: nowrap; }
+.cc-rec td.wrap { white-space: normal; min-width: 180px; }
+.cc-rec-meta { margin: 0 0 10px; font-size: 13px; color: var(--graphite-2); }
+.cc-pill.s-new, .cc-pill.s-pending, .cc-pill.s-initiated, .cc-pill.s-pending_payment { background: #fdf0d8; color: #7a520e; }
+.cc-pill.s-won, .cc-pill.s-qualified, .cc-pill.s-succeeded, .cc-pill.s-confirmed, .cc-pill.s-final { background: #dcefe3; color: #1d5e3a; }
+.cc-pill.s-failed, .cc-pill.s-expired, .cc-pill.s-cancelled, .cc-pill.s-lost { background: #f6dcdc; color: #8e1022; }
+.cc-demo-tag { display: inline-block; margin-left: 6px; padding: 2px 6px; font: 600 9.5px/1.4 var(--sans); letter-spacing: 0.12em; color: #5b3fa0; background: #ece6f8; vertical-align: 1px; }
+.cc-demo { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; margin-top: 24px; padding: 16px; border: 1px dashed rgba(91, 63, 160, 0.4); background: #f7f4fc; }
+.cc-demo b { display: block; font-size: 14px; }
+.cc-demo small { display: block; max-width: 560px; font-size: 13px; color: var(--graphite-2); }

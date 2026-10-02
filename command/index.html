@@ -35,6 +35,7 @@
         <button role="tab" data-tab="bookings">Bookings</button>
         <button role="tab" data-tab="links">Payment links</button>
         <button role="tab" data-tab="activity">Activity</button>
+        <button role="tab" data-tab="records">Records</button>
       </div>
       <div class="cc-actions">
         <button class="cc-btn" type="button" id="refresh" title="Refresh">↻</button>
@@ -62,6 +63,21 @@
 
     <div class="cc-panel" data-panel="links" hidden>
       <div id="links" class="cc-list"></div>
+    </div>
+
+    <div class="cc-panel" data-panel="records" hidden>
+      <div class="cc-filters">
+        <div class="cc-seg" id="rec-kind">
+          <button data-k="enquiries" class="on">Enquiries</button><button data-k="grad_bookings">Grad House</button><button data-k="website_payments">Website payments</button><button data-k="grad_payments">Grad payments</button><button data-k="payment_links">Payment links</button><button data-k="gallery_orders">Gallery orders</button><button data-k="galleries">Galleries</button>
+        </div>
+        <input type="search" id="rec-search" placeholder="Search records"/>
+      </div>
+      <p class="cc-rec-meta" id="rec-meta"></p>
+      <div class="cc-table-wrap"><table class="cc-table cc-rec"><thead id="rec-head"></thead><tbody id="rec-body"></tbody></table></div>
+      <div class="cc-demo">
+        <div><b>QA demo data</b><small>Seeds clearly-labelled DEMO bookings, payments, links and enquiries covering every scenario. Clearing removes only DEMO records.</small></div>
+        <div class="cc-row" style="margin:0"><button class="cc-btn" type="button" id="demo-seed">Seed demo data</button><button class="cc-btn cc-btn-quiet" type="button" id="demo-clear">Clear demo data</button></div>
+      </div>
     </div>
 
     <div class="cc-panel" data-panel="activity" hidden>

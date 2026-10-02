@@ -4,6 +4,8 @@
 // Owner (Supabase session of an active grad_owner_access user):
 //   overview · job_save · job_from_enquiry · payment_record · ledger_delete
 //   link_create · link_cancel · link_refresh
+//   records (read-only view of every enquiry, booking, payment and gallery order)
+//   demo_seed · demo_clear (QA data, flagged is_demo and removable in one call)
 //
 // Jobs are confirmed bookings from any channel (website, Grad House, WhatsApp, manual).
 // Every rand received is a ledger row; outstanding = job total - ledger. A payment link
@@ -66,7 +68,7 @@ function siteOrigin(fallback: unknown) {
 
 // ------------------------------------------------------------------ payment links
 
-const LINK_FIELDS = "id,token,link_ref,client_name,client_phone,client_email,description,purpose,amount_cents,currency,status,attempts,provider_reference,expires_at,paid_at,created_at";
+const LINK_FIELDS = "id,token,link_ref,is_demo,client_name,client_phone,client_email,description,purpose,amount_cents,currency,status,attempts,provider_reference,expires_at,paid_at,created_at";
 
 function publicView(l: any) {
   return {
@@ -206,12 +208,12 @@ async function jobForEnquiry(enquiryId: string, actor: string | null) {
 async function overview() {
   await sync();
   const [{ data: jobs }, { data: links }, { data: items }, { data: ledger }, { data: activity }, { data: enq }] = await Promise.all([
-    sb.from("spodja_job_balances").select("*").neq("status", "cancelled").order("shoot_date", { ascending: true, nullsFirst: false }).limit(500),
+    sb.from("spodja_job_balances_v2").select("*").neq("status", "cancelled").order("shoot_date", { ascending: true, nullsFirst: false }).limit(500),
     sb.from("spodja_payment_links").select(LINK_FIELDS).order("created_at", { ascending: false }).limit(100),
     sb.from("spodja_payment_link_items").select("link_id,job_id,amount_cents"),
     sb.from("spodja_ledger").select("id,job_id,amount_cents,method,note,paid_at,payment_link_id,external_ref").order("paid_at", { ascending: false }).limit(500),
     sb.from("spodja_activity_log").select("id,job_id,link_id,action,detail,created_at").order("created_at", { ascending: false }).limit(80),
-    sb.from("spodja_enquiries").select("id,enquiry_ref,service_type,contact_name,contact_phone,shoot_date,venue,city,estimated_value_cents,budget_range,status,created_at").order("created_at", { ascending: false }).limit(60),
+    sb.from("spodja_enquiries").select("id,enquiry_ref,service_type,contact_name,contact_phone,shoot_date,venue,city,estimated_value_cents,budget_range,status,created_at,is_demo").order("created_at", { ascending: false }).limit(60),
   ]);
   const { data: linked } = await sb.from("spodja_jobs").select("enquiry_id").not("enquiry_id", "is", null);
   const taken = new Set((linked || []).map((x: any) => x.enquiry_id));
@@ -222,6 +224,112 @@ async function overview() {
     activity: activity || [],
     enquiries: (enq || []).filter((e: any) => !taken.has(e.id)),
   };
+}
+
+// ------------------------------------------------------------------ records: read everything
+
+async function records() {
+  const [enq, grads, orders, gpay, links, gorders, galleries, jobs] = await Promise.all([
+    sb.from("spodja_enquiries").select("id,enquiry_ref,service_type,client_type,contact_name,contact_phone,contact_email,shoot_date,venue,city,offer_key,estimated_value_cents,budget_range,status,source,created_at,is_demo").order("created_at", { ascending: false }).limit(300),
+    sb.from("grad_bookings").select("id,booking_reference,customer_id,package_slug,total_amount_cents,payment_status,workflow_status,requested_starts_at,scheduled_starts_at,requested_location_name,expires_at,created_at").order("created_at", { ascending: false }).limit(300),
+    sb.from("spodja_checkout_orders").select("id,enquiry_id,offer_key,payment_plan,amount_cents,provider,status,created_at,paid_at").order("created_at", { ascending: false }).limit(300),
+    sb.from("grad_payments").select("id,booking_id,provider,amount_cents,status,created_at,paid_at").order("created_at", { ascending: false }).limit(300),
+    sb.from("spodja_payment_links").select(LINK_FIELDS).order("created_at", { ascending: false }).limit(300),
+    sb.from("spodja_gallery_orders").select("id,order_ref,gallery_id,status,total_cents,discount_cents,payment_provider,created_at").order("created_at", { ascending: false }).limit(300),
+    sb.from("spodja_galleries").select("id,slug,title,client_name,service_type,status,payment_status,total_amount_cents,paid_amount_cents,balance_due_cents,event_date,expires_at,created_at").order("created_at", { ascending: false }).limit(300),
+    sb.from("spodja_jobs").select("id,job_ref,enquiry_id,grad_booking_id"),
+  ]);
+  const custIds = [...new Set((grads.data || []).map((g: any) => g.customer_id).filter(Boolean))];
+  const { data: customers } = custIds.length ? await sb.from("grad_customers").select("id,full_name,phone,email,university").in("id", custIds) : { data: [] as any[] };
+  const enqRef = new Map((enq.data || []).map((e: any) => [e.id, e.enquiry_ref]));
+  const jobByEnq = new Map((jobs.data || []).filter((j: any) => j.enquiry_id).map((j: any) => [j.enquiry_id, j.job_ref]));
+  const jobByGrad = new Map((jobs.data || []).filter((j: any) => j.grad_booking_id).map((j: any) => [j.grad_booking_id, j.job_ref]));
+  const gradRef = new Map((grads.data || []).map((g: any) => [g.id, g.booking_reference]));
+  const galTitle = new Map((galleries.data || []).map((g: any) => [g.id, g.title]));
+  return {
+    enquiries: (enq.data || []).map((e: any) => ({ ...e, job_ref: jobByEnq.get(e.id) || null })),
+    grad_bookings: (grads.data || []).map((g: any) => ({ ...g, customer: (customers || []).find((c: any) => c.id === g.customer_id) || null, job_ref: jobByGrad.get(g.id) || null })),
+    website_payments: (orders.data || []).map((o: any) => ({ ...o, enquiry_ref: enqRef.get(o.enquiry_id) || null })),
+    grad_payments: (gpay.data || []).map((p: any) => ({ ...p, booking_reference: gradRef.get(p.booking_id) || null })),
+    payment_links: links.data || [],
+    gallery_orders: (gorders.data || []).map((o: any) => ({ ...o, gallery_title: galTitle.get(o.gallery_id) || null })),
+    galleries: galleries.data || [],
+  };
+}
+
+// ------------------------------------------------------------------ demo data (clearly flagged, removable)
+
+const day = (n: number) => sastDate(new Date(Date.now() + n * 864e5).toISOString())!;
+const at = (n: number, hhmm: string) => `${day(n)}T${hhmm}:00+02:00`;
+
+async function demoClear() {
+  const { data: jobs } = await sb.from("spodja_jobs").select("id").eq("is_demo", true);
+  const { data: links } = await sb.from("spodja_payment_links").select("id").eq("is_demo", true);
+  const jobIds = (jobs || []).map((j: any) => j.id), linkIds = (links || []).map((l: any) => l.id);
+  if (jobIds.length) await sb.from("spodja_activity_log").delete().in("job_id", jobIds);
+  if (linkIds.length) await sb.from("spodja_activity_log").delete().in("link_id", linkIds);
+  if (linkIds.length) await sb.from("spodja_payment_links").delete().in("id", linkIds);
+  if (jobIds.length) await sb.from("spodja_jobs").delete().in("id", jobIds);
+  const { data: enq } = await sb.from("spodja_enquiries").delete().eq("is_demo", true).select("id");
+  return { jobs: jobIds.length, links: linkIds.length, enquiries: (enq || []).length };
+}
+
+async function demoSeed(actor: string) {
+  await demoClear();
+  const J = async (key: string, row: Record<string, unknown>) => {
+    const job = await insertWithRef("spodja_jobs", "job_ref", `SJ-DEMO-${key}-`, { source: "whatsapp", status: "confirmed", is_demo: true, created_by: actor, ...row });
+    await log("job_created", { source: job.source, title: job.title, total_cents: job.total_cents, demo: true }, { job: job.id, actor });
+    return job;
+  };
+  const pay = async (job: any, amount: number, method: string, note: string, daysAgo = 3) => {
+    await sb.from("spodja_ledger").insert({ job_id: job.id, amount_cents: method === "refund" ? -amount : amount, method, note: `[DEMO] ${note}`, paid_at: new Date(Date.now() - daysAgo * 864e5).toISOString(), recorded_by: actor });
+    await log("payment_recorded", { method, amount_cents: method === "refund" ? -amount : amount, note, demo: true }, { job: job.id, actor });
+  };
+  const link = async (jobsAmounts: [any, number][], description: string, purpose: string, extra: Record<string, unknown> = {}) => {
+    const first = jobsAmounts[0][0];
+    const l = await insertWithRef("spodja_payment_links", "link_ref", "PL-DEMO", {
+      client_name: first.client_name, client_phone: first.client_phone, client_email: first.client_email, description, purpose,
+      amount_cents: jobsAmounts.reduce((n, [, c]) => n + c, 0), created_by: actor, is_demo: true,
+      expires_at: new Date(Date.now() + 7 * 864e5).toISOString(), ...extra,
+    }, LINK_FIELDS);
+    await sb.from("spodja_payment_link_items").insert(jobsAmounts.map(([j, c]) => ({ link_id: l.id, job_id: j.id, amount_cents: c })));
+    for (const [j, c] of jobsAmounts) await log("link_created", { link_ref: l.link_ref, amount_cents: c, bundle: jobsAmounts.length > 1, demo: true }, { job: j.id, link: l.id, actor });
+    return l;
+  };
+  const who = (name: string, phone: string) => ({ client_name: `${name} (DEMO)`, client_phone: phone, client_email: `${name.split(" ")[0].toLowerCase()}.demo@example.com` });
+
+  // Scenario jobs
+  const d1 = await J("WED", { ...who("Lerato Dlamini", "0820000101"), service_type: "weddings", title: "Traditional / Lobola · 4h", shoot_date: day(9), starts_at: at(9, "10:00"), venue: "Pretoria", total_cents: 500000, notes: "[DEMO] Confirmed on WhatsApp. Nothing paid yet: send the 50% deposit link." });
+  const d2 = await J("LOB", { ...who("Kagiso Molefe", "0710000202"), service_type: "events", title: "Lobola · Event Story", shoot_date: day(4), starts_at: at(4, "11:00"), venue: "Mahikeng", total_cents: 380000, notes: "[DEMO] 50% paid in cash. Balance link expired: create a new balance link." });
+  await pay(d2, 190000, "cash", "Deposit paid in cash", 10);
+  const d3 = await J("POR", { ...who("Thabo Nkosi", "0720000303"), service_type: "portraits", title: "Portrait · Gold", shoot_date: day(-6), starts_at: at(-6, "15:30"), venue: "Johannesburg", total_cents: 380000, status: "delivered", notes: "[DEMO] Paid in full by EFT. Should show Cleared." });
+  await pay(d3, 380000, "eft", "Paid in full by EFT", 12);
+  const d4 = await J("BRD", { ...who("Amahle Creative Studio", "0110000404"), service_type: "brands", title: "Brand content day · quote pending", shoot_date: day(21), venue: "Sandton", total_cents: 0, status: "tentative", notes: "[DEMO] Quote not set yet (total R0). Set a total, then send a deposit link." });
+  const d5 = await J("BDY", { ...who("Naledi Mokoena", "0820000505"), service_type: "events", title: "Birthday · Essential", shoot_date: day(12), starts_at: at(12, "14:00"), venue: "Centurion", total_cents: 220000, notes: "[DEMO] Same client as the baby shower: clear both with ONE bundled link." });
+  const d6 = await J("BSH", { ...who("Naledi Mokoena", "0820000505"), service_type: "events", title: "Baby shower · Story", shoot_date: day(26), starts_at: at(26, "12:00"), venue: "Centurion", total_cents: 380000, notes: "[DEMO] Bundle with the birthday booking." });
+  const d7 = await J("GRD", { ...who("Palesa Mahlangu", "0730000707"), service_type: "graduation", title: "Grad House · Signature (manual)", shoot_date: day(2), starts_at: at(2, "08:30"), venue: "University of Pretoria", total_cents: 170000, notes: "[DEMO] Card payment then partial refund: balance should reappear." });
+  await pay(d7, 170000, "card", "Card on the day", 5);
+  await pay(d7, 30000, "refund", "Partial refund: 3 photos dropped", 1);
+  const d8 = await J("TEN", { ...who("Sipho Ndlovu", "0740000808"), service_type: "portraits", title: "Couples portrait · Silver", shoot_date: day(15), starts_at: at(15, "17:00"), venue: "Melville Koppies", total_cents: 240000, status: "tentative", notes: "[DEMO] Tentative hold on the calendar. Confirm or cancel." });
+  await J("CAN", { ...who("Zanele Khumalo", "0750000909"), service_type: "events", title: "Matric dance · Essential", shoot_date: day(7), venue: "Soweto", total_cents: 220000, status: "cancelled", notes: "[DEMO] Cancelled: must NOT appear on the calendar or outstanding list." });
+  const d10 = await J("OVD", { ...who("Boitumelo Sithole", "0760001010"), service_type: "weddings", title: "The Vow", shoot_date: day(-14), starts_at: at(-14, "09:00"), venue: "Muldersdrift", total_cents: 650000, status: "shot", notes: "[DEMO] Already shot, deposit paid by Yoco link, balance overdue." });
+  const d11 = await J("TOD", { ...who("Mpho Radebe", "0770001111"), service_type: "events", title: "Short Event · Essential", shoot_date: day(0), starts_at: at(0, "18:00"), venue: "Midrand", total_cents: 220000, notes: "[DEMO] Shoot is TODAY: client will pay the balance in cash on the day." });
+  await pay(d11, 110000, "card", "Deposit by card", 6);
+
+  // Payment links in every state
+  await link([[d1, 250000]], "Deposit · Traditional / Lobola · 4h", "deposit");
+  await link([[d2, 190000]], "Balance · Lobola · Event Story", "balance", { expires_at: new Date(Date.now() - 864e5).toISOString() });
+  await link([[d5, 220000], [d6, 380000]], "Balance · Birthday + Baby shower", "balance", { status: "cancelled" });
+  const paid = await link([[d10, 325000]], "Deposit · The Vow", "deposit", { status: "paid", paid_at: new Date(Date.now() - 30 * 864e5).toISOString() });
+  await sb.from("spodja_ledger").insert({ job_id: d10.id, amount_cents: 325000, method: "yoco_link", payment_link_id: paid.id, external_ref: `link:${paid.id}:${d10.id}`, note: `[DEMO] Yoco payment link ${paid.link_ref}`, paid_at: paid.paid_at, recorded_by: actor });
+  await log("link_paid", { link_ref: paid.link_ref, amount_cents: 325000, demo: true }, { link: paid.id, actor });
+
+  // Website enquiries waiting to be confirmed
+  await sb.from("spodja_enquiries").insert([
+    { is_demo: true, service_type: "events", client_type: "birthday", contact_name: "Ayanda Zulu (DEMO)", contact_phone: "0780001212", contact_email: "ayanda.demo@example.com", shoot_date: day(18), venue: "Pretoria East", offer_key: "event-birthday-story", estimated_value_cents: 380000, budget_range: "Birthday Story · R3,800", source: "demo", brief: "[DEMO] Website enquiry: confirm as booking from the command centre." },
+    { is_demo: true, service_type: "brands", client_type: "corporate", contact_name: "Kopano Group (DEMO)", contact_phone: "0110001313", contact_email: "kopano.demo@example.com", shoot_date: day(30), city: "Johannesburg", budget_range: "Quote to brief", source: "demo", brief: "[DEMO] Quote-first brand enquiry: no price until scoped." },
+  ]);
+  return { ok: true };
 }
 
 // ------------------------------------------------------------------ server
@@ -264,6 +372,9 @@ Deno.serve(async (req) => {
     const actor = user.id;
 
     if (action === "overview") return json(await overview());
+    if (action === "records") return json(await records());
+    if (action === "demo_seed") return json(await demoSeed(actor));
+    if (action === "demo_clear") return json({ ok: true, removed: await demoClear() });
 
     if (action === "job_from_enquiry") {
       const job = await jobForEnquiry(clean(body.enquiry_id, 80), actor);

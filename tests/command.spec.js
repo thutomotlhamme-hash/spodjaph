@@ -137,6 +137,13 @@ async function commandBackend(page) {
         log('link_paid', { link_ref: l.link_ref, amount_cents: l.amount_cents });
         return reply(200, { paid: true, link: l });
       }
+      case 'records': return reply(200, {
+        enquiries: [{ id: 'e1', enquiry_ref: 'SPJ-REAL1', service_type: 'weddings', contact_name: 'Real Client', contact_phone: '0820000000', status: 'new', estimated_value_cents: 500000, budget_range: 'Traditional / Lobola · 4h', created_at: new Date().toISOString() }, { id: 'e2', enquiry_ref: 'SPJ-DEMO2', service_type: 'brands', contact_name: 'Kopano Group (DEMO)', contact_phone: '0110001313', status: 'new', is_demo: true, created_at: new Date().toISOString() }],
+        grad_bookings: [{ id: 'g1', booking_reference: 'GH-2041', package_slug: 'signature', total_amount_cents: 170000, payment_status: 'pending', workflow_status: 'expired', created_at: new Date().toISOString(), customer: { full_name: 'Naledi Mokoena', phone: '0821234567' } }],
+        website_payments: [], grad_payments: [], payment_links: [], gallery_orders: [], galleries: [],
+      });
+      case 'demo_seed': return reply(200, { ok: true });
+      case 'demo_clear': return reply(200, { ok: true, removed: { jobs: 11, links: 4, enquiries: 2 } });
       default: return reply(400, { error: 'unknown_action' });
     }
   });
@@ -257,5 +264,24 @@ test.describe('command centre (/command/)', () => {
     await expect(page.locator('#job-dialog')).toBeVisible();
     await expect(page.locator('#job-title')).toHaveText('Naledi Mokoena');
     expect(calls.job_from_enquiry[0]).toMatchObject({ enquiry_id: '33333333-3333-4333-8333-333333333333' });
+  });
+
+  test('records: read every enquiry and Grad booking, seed and clear demo data', async ({ page }) => {
+    const { calls } = await commandBackend(page);
+    page.on('dialog', (d) => d.accept());
+    await page.goto('/command/');
+    await page.getByRole('tab', { name: 'Records' }).click();
+    await expect(page.locator('#rec-body tr')).toHaveCount(2);
+    await expect(page.locator('#rec-body')).toContainText('SPJ-REAL1');
+    await expect(page.locator('#rec-body .cc-demo-tag')).toHaveCount(1);
+    await page.locator('#rec-kind [data-k="grad_bookings"]').click();
+    await expect(page.locator('#rec-body')).toContainText('GH-2041');
+    await expect(page.locator('#rec-body')).toContainText('expired');
+    await page.locator('#rec-search').fill('nothing-matches');
+    await expect(page.locator('#rec-body')).toContainText('No Grad House bookings yet.');
+    await page.getByRole('button', { name: 'Seed demo data' }).click();
+    await expect.poll(() => (calls.demo_seed || []).length).toBe(1);
+    await page.getByRole('button', { name: 'Clear demo data' }).click();
+    await expect.poll(() => (calls.demo_clear || []).length).toBe(1);
   });
 });
