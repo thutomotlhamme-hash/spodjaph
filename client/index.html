@@ -1,37 +1,64 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
-<meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/>
-<meta content="#120f0d" name="theme-color"/>
-<title>Your Gallery — Spodja PH</title>
-<link href="/assets/site.css" rel="stylesheet"/><link href="/assets/lane.css" rel="stylesheet"/><link href="/assets/gallery.css" rel="stylesheet"/>
-<link href="/assets/netlify-ui.css" rel="stylesheet"/><link href="/assets/enhance-v10.css" rel="stylesheet"/><link href="/assets/polish.css" rel="stylesheet"/></head>
-<body class="gallery-access-page">
-<div aria-hidden="true" class="gallery-access-bg"></div>
-<header class="topbar scrolled">
-<a aria-label="Spodja PH home" class="brand" href="/"><img class="spodja-brand-mark" src="/assets/branding/spodja-logo-white.png" alt="Spodja PH"/></a>
-<nav aria-label="Spodja photography journeys" class="nav">
-<a href="/graduation/">Grad House</a><a href="/weddings/">Wedding Lane</a><a href="/events/">Events Avenue</a><a href="/portraits/">Portrait Room</a><a href="/brands/">Brand Desk</a><a href="/book/">The Book</a><a class="active" href="/client/">Your Gallery</a>
-</nav><button aria-expanded="false" aria-label="Toggle menu" class="menu">☰</button>
+<meta name="robots" content="noindex"/>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<meta name="theme-color" content="#fefffc"/>
+<title>Your Gallery | Spodja PH</title>
+<meta name="description" content="Open your private Spodja PH client gallery."/>
+<meta property="og:title" content="Your Gallery | Spodja PH"/>
+<meta property="og:description" content="Open your private Spodja PH client gallery."/>
+<link rel="icon" type="image/png" href="/assets/icons/spodja-192.png"/>
+<link rel="apple-touch-icon" href="/assets/icons/spodja-192.png"/>
+<link rel="manifest" href="/manifest.webmanifest"/>
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/fraunces-latin-opsz-normal.woff2" crossorigin/>
+
+<script>document.documentElement.classList.add('js')</script>
+<link rel="stylesheet" href="/assets/v12.css"/>
+</head>
+<body data-page="client">
+<header class="topbar">
+  <a class="brand" href="/" aria-label="Spodja PH home"><span class="s-logo"><img class="s-logo-white" src="/assets/branding/spodja-logo-white.png" alt="Spodja PH"/><img class="s-logo-accent" src="/assets/branding/spodja-logo-accent.png" alt="" aria-hidden="true"/></span></a>
+  <nav class="nav" aria-label="Main"><a href="/graduation/">Graduation</a><a href="/weddings/">Weddings</a><a href="/events/">Events</a><a href="/portraits/">Portraits</a><a href="/brands/">Brands</a><a href="/book/">The Book</a><a class="s-nav-cta" href="/client/">Your gallery</a></nav>
+  <button class="menu" type="button" aria-label="Open menu" aria-expanded="false">☰</button>
 </header>
-<main class="gallery-access-stage">
-<section class="gallery-access-copy">
-<div class="eyebrow">SPODJA PH · PRIVATE DELIVERY</div>
-<h1>Your story,<br/><em>kept beautifully.</em></h1>
-<p>Open your private gallery to view, favorite, share and download the work we made together.</p>
-</section>
-<section aria-label="Open your client gallery" class="gallery-access-card">
-<span class="access-step">01 · Gallery access</span>
-<h2>Welcome back.</h2>
-<form id="gallery-access-form">
-<label>Gallery code<input autocomplete="off" id="gallery-code" placeholder="e.g. SPD-XXXX" required=""/></label>
-<label>Your name<input autocomplete="name" id="gallery-name" placeholder="Your name"/></label><label>Email<input autocomplete="email" id="gallery-email" placeholder="you@example.com" type="email"/></label><label class="marketing-opt"><input id="gallery-marketing" type="checkbox"/> Keep me in the loop for future Spodja sessions and offers.</label>
-<button class="btn btn-dark" type="submit">Open gallery →</button>
-<p aria-live="polite" class="access-status" id="gallery-access-status"></p>
-</form>
-<details><summary>Preview the Spodja gallery experience</summary><p>Enter <strong>SPODJA-DEMO</strong> above. The preview uses real Spodja portfolio images. Favourites, notes, Quick Share and activity now run through the same secure Gallery OS backend as future client galleries.</p></details>
+<main>
+<section class="s-access">
+  <div class="s-access-copy">
+    <span class="s-eyebrow">Private delivery</span>
+    <h1 class="s-display">Your story, <em>kept beautifully.</em></h1>
+    <p class="s-lede">Open your private gallery to view, favourite, share and download the photographs we made together.</p>
+    <div class="s-access-strip" aria-hidden="true">
+      <img src="/assets/portfolio/hd/wedding-lane-3.jpg" alt="" loading="lazy"/>
+      <img src="/assets/portfolio/hd/grad-house-5.jpg" alt="" loading="lazy"/>
+      <img src="/assets/portfolio/hd/portrait-room-4.jpg" alt="" loading="lazy"/>
+    </div>
+  </div>
+  <section class="s-access-card" aria-label="Open your client gallery">
+    <h2>Welcome back.</h2>
+    <form id="gallery-access-form">
+      <label>Gallery code<input autocomplete="off" id="gallery-code" placeholder="e.g. SPD-XXXX" required/></label>
+      <label>Your name<input autocomplete="name" id="gallery-name" placeholder="Your name"/></label>
+      <label>Email<input autocomplete="email" id="gallery-email" placeholder="you@example.com" type="email"/></label>
+      <label class="marketing-opt"><input id="gallery-marketing" type="checkbox"/> Keep me in the loop for future Spodja sessions and offers.</label>
+      <button class="s-btn s-btn-dark" type="submit">Open gallery →</button>
+      <p aria-live="polite" class="access-status" id="gallery-access-status"></p>
+    </form>
+    <details><summary>Preview the gallery experience</summary><p>Enter <strong>SPODJA-DEMO</strong> as the code to explore a private gallery made from real Spodja work.</p></details>
+  </section>
 </section>
 </main>
-<script src="/assets/site.js"></script><script src="/assets/gallery-access.js"></script>
-<script src="/assets/enhance-v10.js"></script></body></html>
+<footer class="s-foot">
+  <div class="s-foot-inner">
+    <p class="s-foot-statement">Photographs for the days you will want to <em>remember exactly.</em></p>
+    <div class="s-foot-row">
+      <a href="/" aria-label="Spodja PH home"><img src="/assets/branding/spodja-logo-white.png" alt="Spodja PH"/></a>
+      <nav aria-label="Footer"><a href="/graduation/">Graduation</a><a href="/weddings/">Weddings</a><a href="/events/">Events</a><a href="/portraits/">Portraits</a><a href="/brands/">Brands</a><a href="/book/">The Book</a><a href="/client/">Your gallery</a><a href="https://wa.me/27625683235" target="_blank" rel="noopener">WhatsApp</a></nav>
+      <small>© <span data-year>2026</span> Spodja PH · Photography &amp; film · Gauteng</small>
+    </div>
+  </div>
+</footer>
+<script src="/assets/site.js" defer></script><script src="/assets/gallery-access.js" defer></script><script src="/assets/v11.js" defer></script>
+</body>
+</html>

@@ -33,7 +33,7 @@ def head(title, description, preload=None):
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-<meta name="theme-color" content="#0e0c0b"/>
+<meta name="theme-color" content="#fefffc"/>
 <title>{html.escape(title)}</title>
 <meta name="description" content="{html.escape(description)}"/>
 <meta property="og:title" content="{html.escape(title)}"/>
@@ -41,10 +41,10 @@ def head(title, description, preload=None):
 <link rel="icon" type="image/png" href="/assets/icons/spodja-192.png"/>
 <link rel="apple-touch-icon" href="/assets/icons/spodja-192.png"/>
 <link rel="manifest" href="/manifest.webmanifest"/>
-<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/instrument-serif-latin-400-normal.woff2" crossorigin/>
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/fraunces-latin-opsz-normal.woff2" crossorigin/>
 {pre}
 <script>document.documentElement.classList.add('js')</script>
-<link rel="stylesheet" href="/assets/v11.css"/>
+<link rel="stylesheet" href="/assets/v12.css"/>
 </head>"""
 
 
@@ -62,9 +62,12 @@ def footer():
     links = "".join(f'<a href="{h}">{t}</a>' for h, t in NAV)
     return f"""<footer class="s-foot">
   <div class="s-foot-inner">
-    <a href="/" aria-label="Spodja PH home"><img src="/assets/branding/spodja-logo-white.png" alt="Spodja PH"/></a>
-    <nav aria-label="Footer">{links}<a href="/client/">Your gallery</a><a href="https://wa.me/{WHATSAPP}" target="_blank" rel="noopener">WhatsApp</a></nav>
-    <small>© <span data-year>2026</span> Spodja PH · Photography &amp; film · Gauteng</small>
+    <p class="s-foot-statement">Photographs for the days you will want to <em>remember exactly.</em></p>
+    <div class="s-foot-row">
+      <a href="/" aria-label="Spodja PH home"><img src="/assets/branding/spodja-logo-white.png" alt="Spodja PH"/></a>
+      <nav aria-label="Footer">{links}<a href="/client/">Your gallery</a><a href="https://wa.me/{WHATSAPP}" target="_blank" rel="noopener">WhatsApp</a></nav>
+      <small>© <span data-year>2026</span> Spodja PH · Photography &amp; film · Gauteng</small>
+    </div>
   </div>
 </footer>"""
 
@@ -251,8 +254,8 @@ out["graduation/index.html"] = page("graduation", "Graduation | Spodja PH",
 s = read("book/index.html")
 grid = extract(r'<section class="book-grid".*?</section>', s, "book grid")
 lightbox = re.search(r'<dialog[^>]*data-book-lightbox.*?</dialog>', s, re.S)
-main = f"""<section class="s-bay" style="padding-top:clamp(120px,14vw,180px)">
-  <div class="s-head"><div><span class="s-eyebrow">Portfolio</span><h1 class="s-display">The Book.</h1></div><p>A selection of Spodja work across graduation, weddings, events and portraits. Tap any photo to view it full screen.</p></div>
+main = f"""<section class="s-bay" style="padding-top:0">
+  <div class="s-page"><span class="s-eyebrow">Portfolio</span><h1 class="s-display">The Book.</h1><p class="s-lede">A selection of Spodja work across graduation, weddings, events and portraits. Tap any photo to view it full screen.</p></div>
   {grid}
 </section>
 {lightbox.group(0) if lightbox else ''}"""
@@ -290,10 +293,15 @@ main = "\n".join([
     <div class="s-step"><b>03</b><h3>Receive</h3><p>Your edited photos arrive in a private online gallery to view, download and share.</p></div>
   </div>
 </section>""",
-    """<section class="s-bay s-close">
-  <span class="s-eyebrow">Your gallery</span>
-  <h2 class="s-h2">Already shot with us? <em>Your photos are waiting.</em></h2>
-  <div class="s-actions"><a class="s-btn s-btn-ghost" href="/client/">Open your gallery</a></div>
+    """<section class="s-bay" style="padding-top:0">
+  <div class="s-scene s-rise">
+    <img src="/assets/portfolio/hd/_DSC2181.jpg" alt="" loading="lazy" decoding="async" style="object-position:50% 40%"/>
+    <div class="s-scene-card">
+      <span class="s-eyebrow">Your gallery</span>
+      <h2 class="s-h2">Already shot with us? <em>Your photos are waiting.</em></h2>
+      <a class="s-btn s-btn-ghost" href="/client/">Open your gallery</a>
+    </div>
+  </div>
 </section>""",
 ])
 out["index.html"] = page("home", "Spodja PH — We Capture Your Story",
@@ -318,6 +326,44 @@ main = """<section class="s-book s-pay">
 </section>"""
 out["pay/index.html"] = page("pay", "Secure payment | Spodja PH", "Pay your Spodja PH booking securely.", "", main,
                              ["/assets/site.js", "/assets/pay.js"]).replace("<head>", '<head>\n<meta name="robots" content="noindex"/>', 1)
+
+# ---------------------------------------------------------------- your gallery (/client/)
+main = """<section class="s-access">
+  <div class="s-access-copy">
+    <span class="s-eyebrow">Private delivery</span>
+    <h1 class="s-display">Your story, <em>kept beautifully.</em></h1>
+    <p class="s-lede">Open your private gallery to view, favourite, share and download the photographs we made together.</p>
+    <div class="s-access-strip" aria-hidden="true">
+      <img src="/assets/portfolio/hd/wedding-lane-3.jpg" alt="" loading="lazy"/>
+      <img src="/assets/portfolio/hd/grad-house-5.jpg" alt="" loading="lazy"/>
+      <img src="/assets/portfolio/hd/portrait-room-4.jpg" alt="" loading="lazy"/>
+    </div>
+  </div>
+  <section class="s-access-card" aria-label="Open your client gallery">
+    <h2>Welcome back.</h2>
+    <form id="gallery-access-form">
+      <label>Gallery code<input autocomplete="off" id="gallery-code" placeholder="e.g. SPD-XXXX" required/></label>
+      <label>Your name<input autocomplete="name" id="gallery-name" placeholder="Your name"/></label>
+      <label>Email<input autocomplete="email" id="gallery-email" placeholder="you@example.com" type="email"/></label>
+      <label class="marketing-opt"><input id="gallery-marketing" type="checkbox"/> Keep me in the loop for future Spodja sessions and offers.</label>
+      <button class="s-btn s-btn-dark" type="submit">Open gallery →</button>
+      <p aria-live="polite" class="access-status" id="gallery-access-status"></p>
+    </form>
+    <details><summary>Preview the gallery experience</summary><p>Enter <strong>SPODJA-DEMO</strong> as the code to explore a private gallery made from real Spodja work.</p></details>
+  </section>
+</section>"""
+out["client/index.html"] = page("client", "Your Gallery | Spodja PH", "Open your private Spodja PH client gallery.", "/client/", main,
+                                ["/assets/site.js", "/assets/gallery-access.js", "/assets/v11.js"]).replace("<head>", '<head>\n<meta name="robots" content="noindex"/>', 1)
+
+# ---------------------------------------------------------------- checkout (/payment/, /success/)
+# Their markup is driven by payment.js / success.js, so it is carried across untouched.
+for rel, script, title in [("payment/index.html", "/assets/payment.js", "Secure payment | Spodja PH"),
+                           ("success/index.html", "/assets/success.js", "Booking confirmed | Spodja PH")]:
+    cur = (ROOT / rel).read_text()
+    main = extract(r"<main\b.*?</main>", cur, rel)
+    main = re.sub(r"^<main\b[^>]*>|</main>$", "", main.strip()).strip()
+    out[rel] = page(rel.split("/")[0], title, "Spodja PH secure booking.", "", main,
+                    ["/assets/site.js", script, "/assets/v11.js"]).replace("<main>", '<main class="checkout-stage">', 1).replace("<head>", '<head>\n<meta name="robots" content="noindex"/>', 1)
 
 for rel, content in out.items():
     (ROOT / rel).parent.mkdir(parents=True, exist_ok=True)
