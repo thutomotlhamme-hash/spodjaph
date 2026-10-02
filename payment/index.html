@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="robots" content="noindex"/>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<meta name="theme-color" content="#edcdc2"/>
+<title>Secure payment | Spodja PH</title>
+<meta name="description" content="Spodja PH secure booking."/>
+<meta property="og:title" content="Secure payment | Spodja PH"/>
+<meta property="og:description" content="Spodja PH secure booking."/>
+<link rel="icon" type="image/png" href="/assets/icons/spodja-192.png"/>
+<link rel="apple-touch-icon" href="/assets/icons/spodja-192.png"/>
+<link rel="manifest" href="/manifest.webmanifest"/>
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/fraunces-latin-opsz-normal.woff2" crossorigin/>
+
+<script>document.documentElement.classList.add('js')</script>
+<link rel="stylesheet" href="/assets/v12.css"/>
+</head>
+<body data-page="payment">
+<header class="topbar">
+  <a class="brand" href="/" aria-label="Spodja PH home"><span class="s-logo"><img class="s-logo-white" src="/assets/branding/spodja-logo-white.png" alt="Spodja PH"/><img class="s-logo-accent" src="/assets/branding/spodja-logo-accent.png" alt="" aria-hidden="true"/></span></a>
+  <nav class="nav" aria-label="Main"><a href="/graduation/">Graduation</a><a href="/weddings/">Weddings</a><a href="/events/">Events</a><a href="/portraits/">Portraits</a><a href="/brands/">Brands</a><a href="/book/">The Book</a><a class="s-nav-cta" href="/client/">Your gallery</a></nav>
+  <button class="menu" type="button" aria-label="Open menu" aria-expanded="false">☰</button>
+</header>
+<main class="checkout-stage">
+<section class="checkout-intro">
+<div class="kicker">Spodja secure booking</div>
+<h1>Secure the <em>story.</em></h1>
+<p>Your photography journey stays calm all the way through checkout. We show only the payment options that fit the kind of booking you made.</p>
+<div class="checkout-trust"><span>Booking-linked</span><span>Wallet-first</span><span>Card details stay with the gateway</span></div>
+<div class="checkout-story reveal">
+<div class="kicker">Before you continue</div>
+<p class="checkout-story-line">This is the kind of gallery you're about to get — real Spodja deliveries, no stock.</p>
+<div class="journey-visuals stagger">
+<figure><img alt="Wedding photography by Spodja PH" loading="lazy" src="/assets/portfolio/hd/wedding-lane-1.jpg"/></figure>
+<figure><img alt="Birthday celebration photography by Spodja PH" loading="lazy" src="/assets/portfolio/hd/_DSC0729.jpg"/></figure>
+<figure><img alt="Portrait photography by Spodja PH" loading="lazy" src="/assets/portfolio/hd/portrait-room-1.jpg"/></figure>
+</div>
+</div>
+</section>
+<section aria-live="polite" class="checkout-card">
+<div class="checkout-card-top">
+<div><small>Booking reference</small><strong id="pay-ref">Checking…</strong></div>
+<span class="secure-pill">Secure stage</span>
+</div>
+<div class="checkout-summary" id="checkout-summary"></div>
+<div hidden="" id="pay-fixed">
+<div class="pay-choice-title"><span>Choose how to secure it</span><small>You can settle the balance later.</small></div>
+<div class="pay-plan-grid">
+<label class="pay-plan active"><input checked="" name="pay-plan" type="radio" value="deposit"/><span><b>Reserve with 50%</b><small>Lock the booking with a retainer.</small></span><strong id="deposit-amount">—</strong></label>
+<label class="pay-plan"><input name="pay-plan" type="radio" value="full"/><span><b>Pay in full</b><small>One payment. Done.</small></span><strong id="full-amount">—</strong></label>
+</div>
+<div class="balance-policy" id="balance-policy"></div>
+
+
+
+
+
+
+<div class="provider-title"><strong>Choose payment method</strong><small>Only connected gateways are enabled.</small></div><div class="provider-grid"><button class="provider-btn" data-provider="yoco" type="button">Yoco<small>Card / wallet</small></button><button class="provider-btn" data-provider="paystack" type="button">Paystack<small>Secure checkout</small></button><button class="provider-btn" data-provider="ozow" type="button">Ozow<small>Instant EFT</small></button></div><button class="btn btn-dark provider-checkout" data-provider-checkout="" type="button">Continue to secure checkout →</button><p class="payment-provider-note" data-provider-note="">Checking connected payment gateways…</p></div>
+<div class="quote-gate" hidden="" id="pay-custom">
+<span class="quote-number">01</span>
+<h2>Your coverage needs a final scope first.</h2>
+<p>We’ve saved your booking request. Once the hours, deliverables and final amount are approved, this same payment stage becomes active — without making you start again.</p>
+<div class="quote-flow"><span>Request saved</span><i>→</i><span>Scope confirmed</span><i>→</i><span>Wallet checkout</span></div>
+<a class="btn btn-dark" href="https://wa.me/27625683235" rel="noopener" target="_blank">Continue with Spodja →</a>
+</div>
+<div hidden="" id="pay-grad">
+
+
+
+
+
+
+<div class="provider-title"><strong>Choose payment method</strong><small>Only connected gateways are enabled.</small></div><div class="provider-grid"><button class="provider-btn" data-provider="yoco" type="button">Yoco<small>Card / wallet</small></button><button class="provider-btn" data-provider="paystack" type="button">Paystack<small>Secure checkout</small></button><button class="provider-btn" data-provider="ozow" type="button">Ozow<small>Instant EFT</small></button></div><button class="btn btn-dark provider-checkout" data-provider-checkout="" type="button">Continue to secure checkout →</button><p class="payment-provider-note" data-provider-note="">Checking connected payment gateways…</p></div>
+<div class="status" id="pay-status"></div>
+</section>
+</main>
+<footer class="s-foot">
+  <div class="s-foot-inner">
+    <p class="s-foot-statement">Photographs for the days you will want to <em>remember exactly.</em></p>
+    <div class="s-foot-row">
+      <a href="/" aria-label="Spodja PH home"><img src="/assets/branding/spodja-logo-white.png" alt="Spodja PH"/></a>
+      <nav aria-label="Footer"><a href="/graduation/">Graduation</a><a href="/weddings/">Weddings</a><a href="/events/">Events</a><a href="/portraits/">Portraits</a><a href="/brands/">Brands</a><a href="/book/">The Book</a><a href="/client/">Your gallery</a><a href="https://wa.me/27625683235" target="_blank" rel="noopener">WhatsApp</a></nav>
+      <small>© <span data-year>2026</span> Spodja PH · Photography &amp; film · Gauteng</small>
+    </div>
+  </div>
+</footer>
+<script src="/assets/site.js" defer></script><script src="/assets/payment.js" defer></script><script src="/assets/v11.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,202 @@
+/* Spodja PH — Netlify live-site UI skin
+   Visual reference: current spodjaph.netlify.app shell.
+   Product architecture/journeys intentionally unchanged. */
+:root{
+  --ink:#120f0d;
+  --ink2:#1a1614;
+  --cream:#f4efe8;
+  --paper:#fbf8f3;
+  --orange:#c81931;
+  --orange2:#d8283e;
+  --muted:#8d8580;
+  --line:rgba(31,25,22,.15);
+  --white:#fff;
+  --radius:0;
+  --shadow:0 26px 80px rgba(8,6,5,.18);
+}
+html{background:var(--ink)}
+body{font-family:Arial,Helvetica,sans-serif;background:var(--paper);color:#1c1714}
+::selection{background:var(--orange);color:#fff}
+
+/* Header / brand — mirrors the original Spodja shell, no remote logo dependency */
+.topbar{height:92px;padding:0 clamp(22px,4.5vw,70px);background:rgba(18,15,13,.98);border-bottom:1px solid rgba(255,255,255,.045);color:#fff;transition:background .2s,border-color .2s}
+.topbar.scrolled{background:rgba(18,15,13,.98);backdrop-filter:blur(10px);border-color:rgba(255,255,255,.07)}
+.brand{min-width:140px;gap:0;font-weight:400;letter-spacing:0}
+.brand img{display:none!important}
+.brand-live{display:inline-flex;align-items:baseline;gap:10px;white-space:nowrap}
+.brand-live span{font-family:"Instrument Serif",Georgia,'Times New Roman',serif;font-size:31px;font-style:italic;letter-spacing:-.04em;color:#f7f3ef}
+.brand-live b{font-family:"Instrument Serif",Georgia,'Times New Roman',serif;font-size:22px;font-weight:400;letter-spacing:.12em;color:var(--orange)}
+.nav{gap:clamp(18px,2.5vw,42px);font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:.28em}
+.nav a{opacity:.78;padding:37px 0 34px;border-bottom:1px solid transparent}
+.nav a:hover,.nav a.active{opacity:1;border-bottom-color:rgba(255,255,255,.75)}
+.nav-cta{border:0;border-radius:0;padding:37px 0 34px}
+.menu{font-size:23px}
+
+/* Buttons / labels */
+.btn{border-radius:0;padding:16px 26px;min-height:50px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.24em;transition:background .18s,color .18s,transform .18s,border-color .18s}
+.btn:hover{transform:translateY(-1px)}
+.btn-primary{background:var(--orange);color:#fff}
+.btn-primary:hover{background:#ad1328}
+.btn-dark{background:#171311;color:#fff}
+.btn-dark:hover{background:var(--orange)}
+.btn-ghost{background:transparent;border:1px solid rgba(255,255,255,.42);color:#fff;backdrop-filter:none}
+.btn-outline{border:1px solid #2f2925;background:transparent;color:#211c19}
+.eyebrow,.kicker{font-size:9px;letter-spacing:.28em;font-weight:600;color:var(--orange);gap:12px}
+.eyebrow::before,.kicker::before{height:1px;width:28px}
+
+/* === Reception / homepage === */
+.home-live{min-height:100svh;background:var(--ink);color:#fff;overflow:hidden}
+.home-live .topbar{position:fixed;inset:0 0 auto;z-index:50}
+.home-live-main{position:relative;min-height:100svh;display:flex;align-items:center;padding:150px clamp(28px,4.5vw,70px) 90px;background:#120f0d;isolation:isolate}
+.home-live-bg{position:absolute;z-index:-3;inset:0 0 0 46%;overflow:hidden;background:#171310}
+.home-live-bg img{width:100%;height:100%;object-fit:cover;object-position:center 42%;opacity:.20;filter:saturate(.68) contrast(.92);transform:scale(1.01)}
+.home-live-main:before{content:"";position:absolute;z-index:-2;inset:0;background:linear-gradient(90deg,#120f0d 0%,#120f0d 43%,rgba(18,15,13,.91) 58%,rgba(18,15,13,.46) 100%),linear-gradient(0deg,rgba(18,15,13,.74),transparent 52%)}
+.home-live-main:after{content:"";position:absolute;z-index:-1;inset:92px 0 0;background:radial-gradient(circle at 84% 52%,rgba(200,25,49,.06),transparent 27%)}
+.home-live-copy{max-width:800px;position:relative;z-index:2}
+.home-live-logo-note{height:20px;margin-bottom:82px;color:rgba(255,255,255,.30);font-size:9px;text-transform:uppercase;letter-spacing:.24em}
+.home-live h1{font-family:"Instrument Serif",Georgia,'Times New Roman',serif;font-size:clamp(72px,8.3vw,132px);font-weight:400;letter-spacing:-.055em;line-height:.88;margin:0;color:#f8f5f1}
+.home-live h1 em{font-weight:400;color:#f0ebe4}
+.home-live-sub{margin:42px 0 0;max-width:520px;color:rgba(255,255,255,.49);font-size:14px;line-height:1.9;letter-spacing:.015em}
+.home-live-guide{position:absolute;right:clamp(25px,4.6vw,72px);bottom:38px;color:rgba(255,255,255,.36);font-size:8px;letter-spacing:.35em;text-transform:uppercase;display:flex;align-items:center;gap:18px;writing-mode:vertical-rl}
+.home-live-guide:before{content:"";width:1px;height:29px;background:rgba(255,255,255,.15)}
+.home-live-foot{position:absolute;left:clamp(28px,4.5vw,70px);bottom:38px;color:rgba(255,255,255,.28);font-size:8px;text-transform:uppercase;letter-spacing:.22em}
+
+/* === Journey lane heroes === */
+.lane-hero{min-height:88svh;padding:150px clamp(24px,5vw,78px) 60px;background:var(--ink);grid-template-columns:1.03fr .97fr}
+.lane-hero:after{background:linear-gradient(90deg,rgba(18,15,13,.98) 0%,rgba(18,15,13,.91) 43%,rgba(18,15,13,.38) 74%,rgba(18,15,13,.16)),linear-gradient(0deg,rgba(18,15,13,.88),transparent 47%)}
+.lane-hero-copy{max-width:830px}
+.lane-hero h1{font-family:"Instrument Serif",Georgia,'Times New Roman',serif;font-size:clamp(63px,7.4vw,116px);font-weight:400;line-height:.91;letter-spacing:-.055em;text-transform:none;margin:16px 0 26px}
+.lane-hero h1 em{font-family:inherit;font-weight:400;color:#eee7df;text-transform:none}
+.lane-hero p{max-width:610px;font-size:14px;line-height:1.9;color:rgba(255,255,255,.50)}
+.lane-crumb{font-size:8px;letter-spacing:.22em;color:rgba(255,255,255,.4);margin-bottom:30px}
+.lane-hero-art{top:92px;right:0;width:min(50vw,760px);height:calc(100% - 92px)}
+.lane-hero-art .main{width:100%;height:100%;right:0;top:0;box-shadow:none;filter:saturate(.76) contrast(.92)}
+.lane-hero-art .float{display:none}
+.lane-hero .actions{margin-top:34px!important;gap:12px}
+
+/* Secondary nav and story intro */
+.lane-nav{top:92px;background:#f7f3ee;border-bottom:1px solid #ded7d0;padding:0 clamp(22px,5vw,78px);gap:30px;backdrop-filter:none}
+.lane-nav a,.lane-nav button{border:0;border-radius:0;background:transparent;padding:17px 0 15px;font-size:8px;font-weight:600;letter-spacing:.22em;color:#6f6762;border-bottom:1px solid transparent}
+.lane-nav .active,.lane-nav a:hover,.lane-nav button:hover{background:transparent;color:#171311;border-bottom-color:var(--orange)}
+.lane-intro{background:#f8f4ef;padding-top:clamp(82px,9vw,132px)}
+.lane-intro h2,.journey-head h2,.stories-head h2,.section-head h2,.big{font-family:"Instrument Serif",Georgia,'Times New Roman',serif;font-weight:400;text-transform:none;letter-spacing:-.045em}
+.lane-intro h2{font-size:clamp(48px,6.5vw,88px);line-height:.96}
+.lane-intro p{font-size:13px;color:#817873;line-height:1.9}
+.promise-row{background:#ddd6d0;border-color:#ddd6d0;margin-top:64px}
+.promise-row article{background:#f8f4ef;min-height:195px;padding:30px}
+.promise-row small{color:var(--orange);font-size:9px;letter-spacing:.18em}
+.promise-row h3{font-family:"Instrument Serif",Georgia,'Times New Roman',serif;font-weight:400;font-size:29px;margin:35px 0 12px}
+
+/* Booking journey — keep mechanics; style like premium editorial forms */
+.journey{background:#e8e1d9;padding-top:clamp(82px,9vw,130px)}
+.journey:before{opacity:.055!important;filter:grayscale(.25) saturate(.45)!important}
+.journey:after{background:linear-gradient(90deg,rgba(232,225,217,.985),rgba(232,225,217,.93))!important}
+.journey-head{max-width:1380px;margin-bottom:46px}
+.journey-head h2{font-size:clamp(54px,6.8vw,92px);line-height:.94}
+.journey-head p{font-size:13px;color:#766d67;line-height:1.85}
+.journey-shell{gap:16px;max-width:1380px}
+.journey-aside{border-radius:0;background:#171311;padding:38px;box-shadow:none;top:158px}
+.journey-aside h3{font-family:"Instrument Serif",Georgia,'Times New Roman',serif;font-weight:400;font-size:clamp(32px,3vw,46px);letter-spacing:-.035em;line-height:1.02}
+.journey-form{border-radius:0;border:1px solid rgba(31,25,22,.13);box-shadow:none;background:#fbf8f3;padding:clamp(27px,4vw,46px)}
+.booking-steps{border-color:#ddd6d0;gap:22px}
+.step-chip{border-radius:0;background:transparent;padding:7px 0;color:#968d87;font-size:8px;letter-spacing:.16em;border-bottom:1px solid transparent}
+.step-chip.active{background:transparent;color:#171311;border-color:var(--orange)}
+.flow-tabs{gap:22px;border-bottom:1px solid #ddd6d0}
+.flow-tab{border:0;border-radius:0;background:transparent;padding:10px 0 13px;font-size:8px;letter-spacing:.18em;color:#7a716b;border-bottom:2px solid transparent;margin-bottom:-1px}
+.flow-tab.active{background:transparent;color:#171311;box-shadow:none;border-bottom-color:var(--orange)}
+.package-picks{gap:10px}
+.package-pick label{border-radius:0;min-height:156px;background:#fff;padding:19px;box-shadow:none!important}
+.package-pick label:hover{transform:none;border-color:#8f8781}
+.package-pick label b{font-family:"Instrument Serif",Georgia,'Times New Roman',serif;font-size:21px;font-weight:400}
+.package-pick label small{font-size:10px;line-height:1.55}
+.package-pick input:checked+label{border:1px solid var(--orange);box-shadow:inset 3px 0 0 var(--orange)!important}
+.field label{font-size:8px;letter-spacing:.18em;color:#665d57}
+.field input,.field select,.field textarea{border-radius:0;background:#fff;border:1px solid #d7d0ca;padding:15px 13px;color:#201b18}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--orange);box-shadow:none}
+.check label,.inline-checks .check label{border-radius:0;background:transparent;padding:10px 12px;font-size:9px;letter-spacing:.06em}
+.check input:checked+label{background:#171311;color:#fff;border-color:#171311}
+.flow-note{border-radius:0;border-left:2px solid var(--orange);background:#f1ebe5;color:#655c56;padding:17px 18px}
+
+/* Real work / stories */
+.stories{background:#120f0d;padding-top:clamp(90px,10vw,145px)}
+.stories-head h2{font-size:clamp(52px,7vw,96px);line-height:.94}
+.stories-head p{font-size:12px;line-height:1.85;color:rgba(255,255,255,.48)}
+.story-grid{gap:8px}
+.story-col{gap:8px}
+.story-main,.story-small{background:#1c1816}
+.story-main img,.story-small img{filter:saturate(.82)}
+.story-copy small{color:#e4495d;font-size:8px;letter-spacing:.18em}
+.story-copy h3{font-family:"Instrument Serif",Georgia,'Times New Roman',serif;font-weight:400;text-transform:none;letter-spacing:-.03em}
+
+/* Grad House gets same visual shell without touching booking logic */
+.hero.grad-hero{min-height:88svh;padding-top:150px;background:#120f0d}
+.grad-hero .hero-media{filter:saturate(.78);opacity:.75}
+.hero h1,.display{font-family:"Instrument Serif",Georgia,'Times New Roman',serif;font-weight:400;text-transform:none;letter-spacing:-.055em;line-height:.9}
+.outline{-webkit-text-stroke:0;color:#eee8e1;font-style:italic}
+.section.paper{background:#f8f4ef}
+.package,.card{border-radius:0;box-shadow:none;background:#fff}
+.package.featured{border:1px solid var(--orange);transform:none}
+.package .badge,.tag{border-radius:0}
+.package h3,.card h3{font-family:"Instrument Serif",Georgia,'Times New Roman',serif;font-weight:400;text-transform:none}
+
+/* Checkout / success */
+.checkout-page{background:#120f0d}
+.checkout-page:before{opacity:.20;filter:saturate(.65)}
+.checkout-page:after{background:linear-gradient(90deg,rgba(18,15,13,.98),rgba(18,15,13,.72)),radial-gradient(circle at 82% 20%,rgba(200,25,49,.07),transparent 28%)}
+.checkout-stage{padding-top:150px}
+.checkout-intro h1{font-family:"Instrument Serif",Georgia,'Times New Roman',serif;font-weight:400;text-transform:none;letter-spacing:-.055em;line-height:.92}
+.checkout-intro h1 em{font-family:inherit;color:#eee7df}
+.checkout-intro>p{font-size:13px;line-height:1.9;color:rgba(255,255,255,.5)}
+.checkout-trust span{border-radius:0;font-size:8px;letter-spacing:.14em}
+.checkout-card{border-radius:0;background:#fbf8f3;box-shadow:0 30px 100px rgba(0,0,0,.30)}
+.secure-pill{border-radius:0;background:#ece6df}
+.pay-plan{border-radius:0;background:#fff}
+.pay-plan.active{border-color:var(--orange);box-shadow:inset 3px 0 0 var(--orange)}
+.wallet-first-label span{border-radius:0;background:var(--orange)}
+.wallet-btn,.card-pay-btn{border-radius:0;min-height:54px}
+.balance-policy{border-radius:0;background:#f3ece6;border-color:#e7d8d2}
+.quote-flow span{border-radius:0}
+.success-card .summary-box{border-radius:0}
+
+/* Client access */
+.gallery-access-page{background:#120f0d!important}
+.gallery-access-bg{opacity:.20!important;filter:saturate(.65)!important}
+.gallery-access-copy h1{font-family:"Instrument Serif",Georgia,'Times New Roman',serif!important;font-weight:400!important;letter-spacing:-.05em!important}
+.gallery-access-card{border-radius:0!important;box-shadow:none!important}
+
+/* Gallery: keep Pixieset-style functionality, make chrome Spodja */
+.gallery-view{--gallery-accent:#c81931;--gallery-dark:#120f0d}
+.gallery-topbar{background:rgba(18,15,13,.96)!important;color:#fff!important}
+.gallery-logo{font-family:"Instrument Serif",Georgia,'Times New Roman',serif!important;font-style:italic!important;letter-spacing:-.02em!important}
+.gallery-cover-copy h1,.gallery-intro-copy h2,.gallery-dialog h2{font-family:"Instrument Serif",Georgia,'Times New Roman',serif!important;font-weight:400!important}
+.gallery-setbar button.active,.quick-select-toggle.active{color:#c81931!important;border-color:#c81931!important}
+
+/* Footer */
+.footer{background:#0e0c0b;color:rgba(255,255,255,.62);border-top:1px solid rgba(255,255,255,.06);padding:30px clamp(22px,5vw,78px);font-size:9px;letter-spacing:.18em;text-transform:uppercase}
+.footer strong{font-family:"Instrument Serif",Georgia,'Times New Roman',serif;font-style:italic;font-weight:400;font-size:19px;text-transform:none;letter-spacing:-.02em;color:#fff}
+
+@media(max-width:1050px){
+  .nav{gap:18px;letter-spacing:.16em}
+  .nav a{padding-block:37px}
+  .lane-hero-art{opacity:.36;width:68vw;right:-23vw}
+  .home-live-bg{left:38%}
+}
+@media(max-width:760px){
+  .topbar{height:72px;padding-inline:18px}.brand-live span{font-size:26px}.brand-live b{font-size:18px}
+  .topbar .nav{top:72px;background:#120f0d;padding:24px!important;gap:0!important}.nav a{padding:16px 0;border-bottom:1px solid rgba(255,255,255,.09)}
+  .home-live-main{padding:120px 22px 84px;align-items:center}.home-live-bg{inset:72px 0 0 30%;opacity:.75}.home-live-main:before{background:linear-gradient(90deg,#120f0d 0%,rgba(18,15,13,.94) 62%,rgba(18,15,13,.70)),linear-gradient(0deg,rgba(18,15,13,.96),transparent 66%)}
+  .home-live-logo-note{margin-bottom:54px}.home-live h1{font-size:clamp(62px,20vw,94px)}.home-live-sub{font-size:13px;max-width:300px}.home-live-foot{left:22px;bottom:24px}.home-live-guide{right:18px;bottom:24px}
+  .lane-hero{min-height:760px;padding:118px 20px 44px}.lane-hero h1{font-size:clamp(54px,17vw,86px)}.lane-hero-art{top:72px;height:calc(100% - 72px);right:-36vw;width:92vw;opacity:.30}.lane-hero:after{background:linear-gradient(90deg,rgba(18,15,13,.99),rgba(18,15,13,.89) 68%,rgba(18,15,13,.50)),linear-gradient(0deg,rgba(18,15,13,.94),transparent 45%)}
+  .lane-nav{top:72px}
+  .journey-form,.journey-aside,.checkout-card{border-radius:0!important}
+  .booking-steps{gap:10px}.step-chip{font-size:7px}
+}
+/* Active journey cue without changing navigation content */
+body[data-page="weddings"] .nav a[href="/weddings/"],
+body[data-page="events"] .nav a[href="/events/"],
+body[data-page="portraits"] .nav a[href="/portraits/"],
+body[data-page="brands"] .nav a[href="/brands/"],
+body[data-page="graduation"] .nav a[href="/graduation/"],
+body[data-page="client"] .nav a[href="/client/"]{opacity:1;border-bottom-color:rgba(255,255,255,.75)}
+@media(max-width:900px){.topbar .nav{top:92px}}
+@media(max-width:760px){.topbar .nav{top:72px}}

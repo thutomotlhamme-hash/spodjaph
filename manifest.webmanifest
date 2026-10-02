@@ -1,0 +1,21 @@
+{
+  "name": "Spodja PH Client Gallery",
+  "short_name": "Spodja Gallery",
+  "start_url": "/gallery/",
+  "display": "standalone",
+  "background_color": "#120f0d",
+  "theme_color": "#120f0d",
+  "description": "Private Spodja PH client gallery",
+  "icons": [
+    {
+      "src": "/assets/icons/spodja-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/icons/spodja-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

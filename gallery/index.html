@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/><meta content="width=device-width,initial-scale=1,viewport-fit=cover" name="viewport"/>
+<meta content="#edcdc2" name="theme-color"/><meta content="Private Spodja PH client gallery" name="description"/>
+<title>Gallery — Spodja PH</title>
+<link href="/manifest.webmanifest" rel="manifest"/>
+<link rel="preload" as="font" type="font/woff2" href="/assets/fonts/fraunces-latin-opsz-normal.woff2" crossorigin/>
+<link href="/assets/v12.css" rel="stylesheet"/><link href="/assets/gallery.css" rel="stylesheet"/><link href="/assets/gallery-v12.css" rel="stylesheet"/></head>
+<body class="gallery-view" data-demo="false">
+<div class="gallery-register" hidden="" id="gallery-register">
+<div class="register-card">
+<span>Spodja PH · private gallery</span><h2>Come in.</h2>
+<p>Use your email to remember favorites and selections on this device.</p>
+<form id="register-form"><label>Your name<input autocomplete="name" name="name" placeholder="Your name"/></label><label>Email<input autocomplete="email" name="email" placeholder="you@example.com" required="" type="email"/></label><label class="marketing-opt"><input name="marketing" type="checkbox"/> Keep me in the loop for future Spodja sessions and offers.</label><button type="submit">Enter gallery</button><button class="text-btn" id="demo-skip" type="button">Explore demo without email</button></form>
+</div>
+</div>
+<header class="gallery-topbar" id="gallery-topbar">
+<a aria-label="Spodja PH home" class="gallery-logo" href="/">SPODJA <span>PH</span></a>
+<nav aria-label="Gallery tools" class="gallery-tools">
+<button data-action="slideshow" title="Start slideshow">▶ <span>Play</span></button>
+<button data-action="share" title="Share gallery">↗ <span>Share</span></button>
+<button data-action="favorites" title="Favorites">♡ <span>Favorites</span><b data-fav-count="">0</b></button>
+<button data-action="downloads" title="Downloads">⇩ <span>Download</span></button>
+<button data-action="shop" title="Prints and products">＋ <span>Shop</span></button>
+</nav>
+</header>
+<main>
+<section class="gallery-cover" id="cover">
+<img alt="Spodja PH wedding photography" fetchpriority="high" src="/assets/portfolio/wedding-hero.jpg"/>
+<div class="gallery-cover-shade"></div>
+<div class="gallery-cover-copy">
+<span>Private client gallery</span>
+<h1>Your story.<br/><em>Beautifully delivered.</em></h1>
+<p>Private delivery · Spodja PH</p>
+<button class="cover-enter" data-scroll-gallery="">View the story ↓</button>
+</div>
+<div class="cover-status"><i></i> Private gallery · Secure delivery</div>
+</section>
+<section class="gallery-intro" id="gallery">
+<div class="gallery-intro-copy"><span>Your collection</span><h2>Relive it.<br/>Choose it.<br/>Share it.</h2></div>
+<div class="gallery-intro-note"><p>Your photographs live inside the same Spodja experience from booking to delivery. Choose favourites, leave notes, share selected images and keep the gallery close on your phone.</p><button class="assist-trigger" data-action="assist">How this gallery works →</button></div>
+</section>
+<div aria-label="Gallery sets" class="gallery-setbar" role="tablist">
+<button class="active" data-set="all">All work <span>13</span></button>
+<button data-set="weddings">Weddings <span>3</span></button>
+<button data-set="events">Events <span>3</span></button>
+<button data-set="portraits">Portraits <span>3</span></button>
+<button data-set="graduation">Graduation <span>4</span></button>
+<button class="quick-select-toggle" data-action="quick-select">Select to share</button>
+</div>
+<section aria-live="polite" class="gallery-grid" id="photo-grid"></section>
+<section class="gallery-end">
+<span>End of collection</span><h2>Keep the story close.</h2>
+<div><button data-action="favorites">Review favorites</button><button data-action="install">Save gallery to phone</button><button data-action="share">Share gallery</button></div>
+</section>
+</main>
+<div class="quick-share-bar" hidden="" id="quick-share-bar"><span><b id="quick-share-count">0</b> selected</span><button id="quick-share-clear">Clear</button><button id="quick-share-create">Create private share link →</button></div>
+<div aria-live="polite" class="gallery-toast" id="gallery-toast" role="status"></div>
+<dialog class="gallery-dialog" id="assist-dialog"><button class="dialog-close" data-close="">×</button><span class="dialog-kicker">Gallery assist</span><h2>Everything is right here.</h2><div class="assist-grid"><article><b>♡</b><h3>Choose favorites</h3><p>Create lists for album selects, prints or retouch requests and leave notes on individual photographs.</p></article><article><b>↗</b><h3>Share safely</h3><p>Share the full gallery or selected photographs only. WhatsApp-first sharing is built in for Spodja.</p></article><article><b>⇩</b><h3>Control downloads</h3><p>Client galleries can allow web-size, high-resolution, single-photo or full-gallery delivery depending on the booking.</p></article></div></dialog>
+<dialog class="gallery-dialog drawer" id="favorites-dialog"><button class="dialog-close" data-close="">×</button><span class="dialog-kicker">Your selections</span><div class="drawer-head"><h2>Favorites.</h2><button id="new-list-btn">+ New list</button></div><div class="favorite-lists" id="favorite-lists"></div><div class="favorite-items" id="favorite-items"></div><div class="drawer-foot"><button id="submit-favorites">Send selections to Spodja</button><small>Selections sync to your private Spodja gallery session.</small></div></dialog>
+<dialog class="gallery-dialog" id="share-dialog"><button class="dialog-close" data-close="">×</button><span class="dialog-kicker">Share</span><h2>Pass the story on.</h2><div class="share-actions"><button id="share-native">↗ Share from this device</button><a id="share-whatsapp" rel="noopener" target="_blank">WhatsApp</a><button id="copy-gallery-link">Copy gallery link</button></div><p class="dialog-note">Live private galleries can create guest links that reveal only the images you choose.</p></dialog>
+<dialog class="gallery-dialog" id="download-dialog"><button class="dialog-close" data-close="">×</button><span class="dialog-kicker">Download</span><h2>Your files, your way.</h2><div class="download-options"><article><span>Web ready</span><h3>Social + phone</h3><p>Optimized for messaging, social posts and quick sharing.</p><button id="download-web">Choose photos</button></article><article><span>High resolution</span><h3>Print + archive</h3><p>Full-quality delivery for printing and long-term keeping.</p><button id="download-hi">Choose photos</button></article></div><button class="download-all" id="download-visible" type="button">Download visible set</button><p class="dialog-note" id="download-policy-note">Your gallery controls web/high-resolution access, download activity and any booking-balance gate.</p></dialog>
+<dialog class="gallery-dialog pin-dialog" id="pin-dialog"><button class="dialog-close" data-close="">×</button><span class="dialog-kicker">Private delivery</span><h2>Unlock your files.</h2><p class="dialog-note">This gallery uses a separate download PIN. Enter it once for this private gallery session.</p><input autocomplete="one-time-code" id="download-pin" inputmode="numeric" maxlength="32" placeholder="Download PIN"/><button id="unlock-downloads" type="button">Unlock downloads →</button><p aria-live="polite" class="dialog-note" id="pin-status"></p></dialog>
+<dialog class="gallery-dialog" id="shop-dialog"><button class="dialog-close" data-close="">×</button><span class="dialog-kicker">Spodja print room</span><h2>Turn pixels into something you can hold.</h2><div class="shop-grid"><article><span>Prints</span><h3>Fine-art &amp; photographic prints</h3><p>Choose an image from the gallery and request the size that suits your space.</p><button data-shop="prints">Choose a photograph</button></article><article><span>Albums</span><h3>Curated story books</h3><p>Use a Favorite List as the starting point for your wedding, event or milestone album.</p><button data-shop="album">Use my favorites</button></article><article><span>Digital</span><h3>Additional files</h3><p>Selected galleries can sell extra retouches, additional downloads or alternate crops.</p><button data-shop="digital">View options</button></article></div><div class="shop-checkout"><label>Coupon / gift code <input autocomplete="off" id="shop-coupon" placeholder="Optional"/></label><p aria-live="polite" class="dialog-note" id="order-result"></p></div><p class="dialog-note">Product pricing stays gallery-specific. Orders can be captured here now; payment remains pending until Spodja’s live gateway is connected.</p></dialog>
+<dialog class="gallery-dialog lightbox" id="lightbox"><button class="lightbox-close" data-close="">×</button><button class="lightbox-prev" id="lb-prev">‹</button><div class="lightbox-stage"><img alt="" id="lb-img"/><div class="lightbox-meta"><span id="lb-set"></span><b id="lb-title"></b><div class="lightbox-actions"><button id="lb-fav">♡ Favorite</button><button id="lb-note">✎ Note</button><button id="lb-share">↗ Share</button><button id="lb-download" type="button">⇩ Download</button></div></div></div><button class="lightbox-next" id="lb-next">›</button></dialog>
+<dialog class="gallery-dialog note-dialog" id="note-dialog"><button class="dialog-close" data-close="">×</button><span class="dialog-kicker">Photo note</span><h2>Tell us what you need.</h2><textarea id="photo-note" placeholder="e.g. Please use this one in the album opener."></textarea><button id="save-note">Save note</button></dialog>
+<dialog class="gallery-dialog slideshow" id="slideshow-dialog"><button class="lightbox-close" data-close="">×</button><img alt="Spodja PH slideshow" id="slideshow-img"/><div><span id="slideshow-count"></span><button id="slideshow-toggle">Pause</button></div></dialog>
+<script src="/assets/gallery.js"></script></body></html>
