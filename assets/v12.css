@@ -503,3 +503,7 @@ a.s-tile:hover img { transform: translateY(-3px); box-shadow: 0 1px 2px rgba(74,
   :root { --photo-radius: 16px; --scene-radius: 22px; }
   .s-hero { margin: 8px; min-height: calc(100svh - 16px); }
 }
+
+/* Event visuals: fewer than three photos fill the row evenly */
+.journey-visuals figure[hidden]{display:none}
+.journey-visuals:has(figure[hidden]){grid-template-columns:1fr 1fr}

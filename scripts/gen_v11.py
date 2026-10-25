@@ -96,6 +96,11 @@ SLIDES = {
     "events": ["_DSC2181.jpg", "_DSC2179.jpg", "_DSC2115.jpg", "_DSC2151.jpg"],
     "brands": ["_DSC0334copy(3).jpg", "_DSC0336copy(3).jpg", "_DSC2181.jpg", "_DSC0396copy(3).jpg"],
 }
+# "The work" strips: HD only (the original low-res uploads look soft on big screens)
+WORK = {
+    "events": ["_DSC2179.jpg", "_DSC0728.jpg", "birthday-4.jpg", "_DSC0729.jpg", "birthday-2.jpg"],
+    "brands": ["_DSC0334copy(3).jpg", "_DSC0279copy(3).jpg", "_DSC0336copy(3).jpg", "_DSC0313copy(3).jpg", "_DSC0319copy(3).jpg"],
+}
 
 
 def hero(img, eyebrow, h1, lede, primary, secondary=None, pos="50% 28%", slides=None):
@@ -187,7 +192,7 @@ LANES = {
     "brands": dict(
         title="Brands | Spodja PH", eyebrow="Brand Desk",
         lede="Corporate photography, activations and content, built around where the images go after the shoot.",
-        hero="/assets/portfolio/event-lobola.jpg", pos="50% 35%",
+        hero="/assets/portfolio/hd/_DSC0319copy(3).jpg", pos="50% 25%",
         work_h="Content that works.",
         book_h="Brief us <em>once.</em>",
         book_p="Tell us what the shoot is for, choose the coverage and add deliverables. We reply with a quote and a secure payment link.",
@@ -202,6 +207,7 @@ for slug, cfg in LANES.items():
     desc = desc.group(1) if desc else cfg["lede"]
     imgs = list(dict.fromkeys(re.findall(r'src="(/assets/portfolio/[^"]+)"', s)))
     imgs = [i for i in imgs if i != cfg["hero"]] + [cfg["hero"]]
+    imgs = [HD + f for f in WORK[slug]] if slug in WORK else [i for i in imgs if "/hd/" in i]
     main = "\n".join([
         hero(cfg["hero"], cfg["eyebrow"], h1_of(s), cfg["lede"], ("#book", "See packages"), ("#work", "See the work"), cfg["pos"], SLIDES[slug]),
         work(imgs, cfg["work_h"]),
@@ -268,7 +274,7 @@ SERVICES = [
     ("/weddings/", "Weddings", "Intimate, traditional and full-day coverage.", "/assets/portfolio/hd/wedding-lane-1.jpg"),
     ("/events/", "Events", "Lobola, matric dance, birthdays, baby showers.", "/assets/portfolio/hd/_DSC2115.jpg"),
     ("/portraits/", "Portraits", "Personal, couples and professional.", "/assets/portfolio/hd/portrait-room-1.jpg"),
-    ("/brands/", "Brands", "Corporate, activations and content.", "/assets/portfolio/portrait-2.jpg"),
+    ("/brands/", "Brands", "Corporate, activations and content.", "/assets/portfolio/hd/_DSC0334copy(3).jpg"),
 ]
 tiles = "".join(
     f'<a class="s-tile" href="{h}"><img src="{img}" alt="" loading="lazy" decoding="async"/><div class="s-tile-copy"><h3>{t}</h3><p>{d}</p></div></a>'
