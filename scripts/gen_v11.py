@@ -98,7 +98,7 @@ SLIDES = {
 }
 # "The work" strips: HD only (the original low-res uploads look soft on big screens)
 WORK = {
-    "events": ["_DSC2179.jpg", "_DSC0728.jpg", "_DSC2115.jpg", "_DSC0729.jpg", "_DSC2151.jpg"],
+    "events": ["_DSC2179.jpg", "_DSC0728.jpg", "birthday-4.jpg", "_DSC0729.jpg", "birthday-2.jpg"],
     "brands": ["_DSC0334copy(3).jpg", "_DSC0279copy(3).jpg", "_DSC0336copy(3).jpg", "_DSC0313copy(3).jpg", "_DSC0319copy(3).jpg"],
 }
 
