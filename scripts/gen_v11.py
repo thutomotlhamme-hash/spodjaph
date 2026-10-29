@@ -143,6 +143,27 @@ def h1_of(s):
 WA_NOTE = "Prefer to chat first? Book on WhatsApp and we’ll confirm your date and send a secure payment link."
 
 
+def dedupe_picks(form):
+    """When every card in a package group repeats the same price note or 'Includes' line, say it once under the group."""
+    def group(m):
+        cards = re.findall(r'<div class="package-pick">.*?</label></div>', m.group(1))
+        if len(cards) < 2:
+            return m.group(0)
+        inc = {re.search(r'<em class="package-includes">(.*?)</em>', c).group(1) if 'package-includes' in c else None for c in cards}
+        price = {re.search(r'<strong>(.*?)</strong>', c).group(1) if '<strong>' in c else None for c in cards}
+        shared = []
+        if len(price) == 1 and None not in price and "R" not in next(iter(price)):
+            shared.append(next(iter(price)))
+            cards = [re.sub(r'<strong>.*?</strong>', '', c) for c in cards]
+        if len(inc) == 1 and None not in inc:
+            shared.append(next(iter(inc)))
+            cards = [re.sub(r'<em class="package-includes">.*?</em>', '', c) for c in cards]
+        if not shared:
+            return m.group(0)
+        return f'<div class="package-picks">{"".join(cards)}</div><p class="s-picks-note">{" · ".join(shared)}</p>'
+    return re.sub(r'<div class="package-picks">((?:<div class="package-pick">.*?</label></div>)+)</div>', group, form)
+
+
 def choices(form, grad=False, quote=False):
     """Two clear ways to book: pay now through Yoco, or confirm on WhatsApp first."""
     pay = "Pay &amp; reserve my time →" if grad else "Send my brief →" if quote else "Pay &amp; book →"
@@ -171,7 +192,7 @@ LANES = {
         hero="/assets/portfolio/hd/wedding-lane-1.jpg", pos="50% 30%",
         work_h="Every part of the day.",
         book_h="Build your <em>coverage.</em>",
-        book_p="Choose the kind of wedding, pick a package and add what you need. Pay securely to book, or confirm on WhatsApp first.",
+        book_p="Choose the kind of wedding, pick a package and add what you need.",
     ),
     "events": dict(
         title="Events | Spodja PH", eyebrow="Events Avenue",
@@ -179,7 +200,7 @@ LANES = {
         hero="/assets/portfolio/hd/_DSC2179.jpg", pos="50% 30%",
         work_h="Celebrations, kept.",
         book_h="Plan your <em>event.</em>",
-        book_p="Choose the celebration, pick a package and the extras you want. Pay securely to book, or confirm on WhatsApp first.",
+        book_p="Choose the celebration, pick a package and the extras you want.",
     ),
     "portraits": dict(
         title="Portraits | Spodja PH", eyebrow="Portrait Room",
@@ -187,7 +208,7 @@ LANES = {
         hero="/assets/portfolio/hd/portrait-room-1.jpg", pos="50% 22%",
         work_h="You, intentionally.",
         book_h="Book your <em>session.</em>",
-        book_p="Choose the kind of portrait, pick a package and add what you need. Pay securely to book, or confirm on WhatsApp first.",
+        book_p="Choose the kind of portrait, pick a package and add what you need.",
     ),
     "brands": dict(
         title="Brands | Spodja PH", eyebrow="Brand Desk",
@@ -202,7 +223,7 @@ LANES = {
 out = {}
 for slug, cfg in LANES.items():
     s = read(f"{slug}/index.html")
-    form = choices(extract(r"<form\b.*?</form>", s, f"{slug} form"), quote=slug == "brands")
+    form = choices(dedupe_picks(extract(r"<form\b.*?</form>", s, f"{slug} form")), quote=slug == "brands")
     desc = re.search(r'<meta content="([^"]*)" name="description"', s)
     desc = desc.group(1) if desc else cfg["lede"]
     imgs = list(dict.fromkeys(re.findall(r'src="(/assets/portfolio/[^"]+)"', s)))
@@ -230,15 +251,15 @@ gimgs = list(dict.fromkeys(re.findall(r'src="(/assets/portfolio/[^"]+)"', s)))
 gdesc = re.search(r'<meta content="([^"]*)" name="description"', s)
 main = "\n".join([
     hero("/assets/portfolio/hd/grad-house-1.jpg", "The Grad House", h1_of(s),
-         "Choose your session, campus, date and a live time. Then pay securely to lock it in, or book on WhatsApp.",
+         "Choose your session, campus, date and a live time.",
          ("#book", "Book my shoot"), ("#packages", "See packages"), "50% 24%", SLIDES["graduation"]),
     """<section class="s-bay s-bay-2" id="packages">
-  <div class="s-head s-rise"><div><span class="s-eyebrow">Packages</span><h2 class="s-h2">Choose your <em>story.</em></h2></div><p>Live prices. Every package includes edited high-resolution images in a private gallery.</p></div>
+  <div class="s-head s-rise"><div><span class="s-eyebrow">Packages</span><h2 class="s-h2">Choose your <em>story.</em></h2></div><p>Pick the session that fits your day. Every package comes with a private Spodja gallery for viewing and download.</p></div>
   <div class="package-grid" data-packages><article class="package"><h3>Loading packages…</h3></article></div>
 </section>""",
     work(gimgs[1:] + gimgs[:1], "The Grad House look."),
     f"""<section class="s-book" id="book">
-  <div class="s-head"><div><span class="s-eyebrow">Book</span><h2 class="s-h2">Book your <em>shoot.</em></h2></div><p>Pick a package, find your campus and choose a live time. Pay securely to reserve it, or book on WhatsApp.</p></div>
+  <div class="s-head"><div><span class="s-eyebrow">Book</span><h2 class="s-h2">Book your <em>shoot.</em></h2></div><p>Pick a package, find your campus and choose a live time.</p></div>
   <div class="s-book-wide">
     <aside>
       <div class="summary-box" id="package-summary"><small>Choose a package to see details.</small></div>

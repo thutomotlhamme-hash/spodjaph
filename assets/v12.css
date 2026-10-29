@@ -507,3 +507,6 @@ a.s-tile:hover img { transform: translateY(-3px); box-shadow: 0 1px 2px rgba(74,
 /* Event visuals: fewer than three photos fill the row evenly */
 .journey-visuals figure[hidden]{display:none}
 .journey-visuals:has(figure[hidden]){grid-template-columns:1fr 1fr}
+
+/* One shared line under a package group instead of repeating it on every card */
+.s-picks-note{margin:10px 2px 0;font-size:13px;line-height:1.5;color:var(--ash)}
